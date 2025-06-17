@@ -14,13 +14,13 @@ export default function Indoor() {
     },
     {
       name: "Stairway to Tasty",
-      image: "/images/cafeteria.jpg", 
-      description: "Modern dining facility serving fresh meals and snacks"
+      image: "/images/nearby/to-tasty.jpeg", 
+      description: "A big staircase that leads to tasty"
     },
     {
       name: "Stairway to CDH1",
-      image: "/images/auditorium.jpg",
-      description: "State-of-the-art auditorium with 500+ seating capacity"
+      image: "/images/nearby/to-cdh1.jpeg",
+      description: "A stairway that leads to cdh1"
     },
   ];
 
@@ -68,10 +68,10 @@ export default function Indoor() {
                   >
                     <div className="ml-8 mt-3 mb-4 transform transition-all duration-500 ease-in-out">
                       <div 
-                        className="relative w-64 h-40 bg-cover bg-center rounded-lg overflow-hidden shadow-lg transform transition-transform duration-300 hover:scale-105"
+                        className="relative w-64 h-40 bg-cover bg-center rounded-lg overflow-hidden shadow-lg transform transition-transform duration-300 hover:scale-130"
                         style={{ backgroundImage: `url('${place.image}')` }}
                       >
-                        <div className="absolute inset-0 bg-black/50 flex items-center justify-center p-4">
+                        <div className="absolute inset-0 bg-black/20 flex items-center justify-center p-4">
                           <p className="text-white text-sm text-center font-medium">
                             {place.description}
                           </p>

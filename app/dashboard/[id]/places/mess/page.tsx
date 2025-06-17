@@ -69,7 +69,7 @@ export default function Indoor() {
                   >
                     <div className="ml-8 mt-3 mb-4 transform transition-all duration-500 ease-in-out">
                       <div 
-                        className="relative w-64 h-40 bg-cover bg-center rounded-lg overflow-hidden shadow-lg transform transition-transform duration-300 hover:scale-105"
+                        className="relative w-64 h-40 bg-cover bg-center rounded-lg overflow-hidden shadow-lg transform transition-transform duration-300 hover:scale-130"
                         style={{ backgroundImage: `url('${place.image}')` }}
                       >
                         <div className="absolute inset-0 bg-black/20 flex items-center justify-center p-4">

@@ -39,7 +39,7 @@ export default function Indoor() {
     <DashboardLayout>
       <div
         className="h-full w-full bg-cover bg-center rounded-2xl flex"
-        style={{ backgroundImage: "url('/images/on-way.jpeg')" }}>
+        style={{ backgroundImage: "url('/images/kathinpara.jpeg')" }}>
         
         {/* Places nearby tree structure - Left side */}
         <div className="flex-1 flex items-center justify-start pl-8">

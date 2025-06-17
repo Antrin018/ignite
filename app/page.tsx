@@ -121,7 +121,7 @@ export default function HomePage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-red-500 text-white py-4 rounded-full font-medium text-lg hover:bg-red-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+            className="w-full bg-red-500 text-white py-4 rounded-full font-medium text-lg hover:bg-red-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 duration-200"
           >
             {loading ? 'Entering...' : 'Sign in'}
           </button>

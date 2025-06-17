@@ -22,6 +22,12 @@ export default function Indoor() {
       image: "/images/nearby/TT.jpeg",
       description: "We also have Table Tennis"
     },
+
+    {
+      name: "Tennis Court",
+      image: "/images/nearby/TT.jpeg",
+      description: "We also have a Tennis Court"
+    },
     {
       name: "Gym",
       image: "/images/nearby/gym.jpg",

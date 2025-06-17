@@ -2,7 +2,7 @@
 
 import DashboardLayout from '@/components/DashboardLayout';
 import { useSearchParams, useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { supabase } from '@/lib/supabase-client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, ChevronUp, Sparkles, Users, User } from 'lucide-react';
@@ -27,77 +27,104 @@ export default function FreshersPage() {
   const [fireStatus, setFireStatus] = useState<number | null>(null);
   const [isClient, setIsClient] = useState(false);
 
+  // Refs for polling management
+  const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const isPollingActiveRef = useRef<boolean>(false);
+
   useEffect(() => {
     setIsClient(true);
     
-    const fetchFireStatus = async () => {
+    // Initial data fetch
+    fetchFireStatus();
+    fetchEvents();
+    
+    // Start polling - define inline to avoid dependency issues
+    const startPollingInline = () => {
+      // Clear any existing polling interval
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
+      }
+      
+      // Set polling as active
+      isPollingActiveRef.current = true;
+      
+      // Start polling every 2 seconds
+      pollingIntervalRef.current = setInterval(async () => {
+        if (!isPollingActiveRef.current) {
+          return;
+        }
+        
+        try {
+          // Fetch both fire status and events simultaneously
+          await Promise.all([
+            fetchFireStatus(),
+            fetchEvents()
+          ]);
+        } catch (error) {
+          console.error('Polling error:', error);
+        }
+      }, 2000); // Poll every 2 seconds
+    };
+
+    startPollingInline();
+
+    // Cleanup on unmount
+    return () => {
+      stopPolling();
+    };
+  }, []);
+
+  const fetchFireStatus = async () => {
+    try {
       const { data, error } = await supabase
         .from('admin_status')
         .select('fire_status')
         .single();
 
-      if (!error && data) setFireStatus(data.fire_status);
-    };
+      if (!error && data) {
+        setFireStatus(prevStatus => {
+          if (prevStatus !== data.fire_status) {
+            console.log('Fire status changed:', data.fire_status === 200 ? 'Open' : 'Closed');
+            return data.fire_status;
+          }
+          return prevStatus;
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching fire status:', error);
+    }
+  };
 
-    const fetchEvents = async () => {
+  const fetchEvents = async () => {
+    try {
       const { data, error } = await supabase
         .from('events')
         .select('id, title, description, date, time, registration_open, Team_event')
         .order('time', { ascending: true });
 
-      if (!error && data) setEvents(data);
-    };
-
-    // Initial fetch
-    fetchFireStatus();
-    fetchEvents();
-
-    // Set up real-time subscriptions
-    const adminStatusChannel = supabase
-      .channel('admin_status_changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'admin_status'
-        },
-        (payload) => {
-          console.log('Admin status changed:', payload);
-          interface AdminStatusPayload {
-            fire_status: number;
+      if (!error && data) {
+        setEvents(prevEvents => {
+          // Check if events have actually changed to avoid unnecessary re-renders
+          const hasChanged = JSON.stringify(prevEvents) !== JSON.stringify(data);
+          if (hasChanged) {
+            console.log('Events updated:', data.length, 'events found');
+            return data;
           }
-          if (payload.new && 'fire_status' in payload.new && typeof (payload.new as AdminStatusPayload).fire_status === 'number') {
-            setFireStatus((payload.new as AdminStatusPayload).fire_status);
-          }
-          
-        }
-      )
-      .subscribe();
+          return prevEvents;
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    }
+  };
 
-    const eventsChannel = supabase
-      .channel('events_changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'events'
-        },
-        (payload) => {
-          console.log('Events changed:', payload);
-          // Refetch events when any event is updated
-          fetchEvents();
-        }
-      )
-      .subscribe();
-
-    // Cleanup subscriptions on unmount
-    return () => {
-      supabase.removeChannel(adminStatusChannel);
-      supabase.removeChannel(eventsChannel);
-    };
-  }, []);
+  const stopPolling = () => {
+    isPollingActiveRef.current = false;
+    if (pollingIntervalRef.current) {
+      clearInterval(pollingIntervalRef.current);
+      pollingIntervalRef.current = null;
+    }
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -300,6 +327,12 @@ export default function FreshersPage() {
               >
                 Registrations are closed
               </motion.h2>
+              
+              {/* Status indicator */}
+              <div className="flex items-center justify-center gap-2 text-sm text-gray-400 mt-4">
+                <div className="animate-pulse w-2 h-2 bg-red-500 rounded-full"></div>
+                <span>Checking for reopening...</span>
+              </div>
             </motion.div>
           ) : fireStatus === 200 ? (
             <>
@@ -486,6 +519,23 @@ export default function FreshersPage() {
                 })}
               </motion.div>
             </>
+          ) : fireStatus === null ? (
+            /* Loading state */
+            <motion.div 
+              className="text-center text-white"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-400"></div>
+                <span className="text-xl text-gray-300">Loading events...</span>
+              </div>
+              <div className="flex items-center justify-center gap-2 text-sm text-gray-400">
+                <div className="animate-pulse w-2 h-2 bg-blue-500 rounded-full"></div>
+                <span>Fetching latest information...</span>
+              </div>
+            </motion.div>
           ) : null}
         </div>
       </div>

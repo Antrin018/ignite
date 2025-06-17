@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { supabase } from '@/lib/supabase-client';
 import Switch from '@/components/ui/switch';
 import { Plus, Pencil, Trash2, Search, Flame, Download } from 'lucide-react';
@@ -37,7 +37,15 @@ interface MediaFile {
   studentId: string;
 }
 
+interface AdminStatus {
+  id?: number;
+  admin_access: boolean;
+  fire_status?: number;
+  updated_at?: string;
+}
+
 export default function AdminDashboard() {
+  const [adminAccess, setAdminAccess] = useState<boolean | null>(null); // null = loading, true = access granted, false = access denied
   const [events, setEvents] = useState<Event[]>([]);
   const [creating, setCreating] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -72,11 +80,110 @@ export default function AdminDashboard() {
   });
   const [searchQuery, setSearchQuery] = useState('');
   const [fireActive, setFireActive] = useState(false);
+  
+  // Refs for polling management
+  const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const isPollingActiveRef = useRef<boolean>(false);
 
+  // Check admin access on component mount
   useEffect(() => {
-    fetchEvents();
-    initializeFireStatus();
+    checkAdminAccess();
+    startAdminAccessPolling();
+    
+    // Cleanup polling on unmount
+    return () => {
+      stopAdminAccessPolling();
+    };
   }, []);
+
+  // Load other data only if admin access is granted
+  useEffect(() => {
+    if (adminAccess === true) {
+      fetchEvents();
+      initializeFireStatus();
+    }
+  }, [adminAccess]);
+
+  const checkAdminAccess = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('admin_status')
+        .select('admin_access')
+        .single();
+      
+      if (error) {
+        console.error('Error checking admin access:', error);
+        setAdminAccess(false);
+        return;
+      }
+      
+      // Safely check if data exists and has admin_access property
+      const hasAccess = data && (data as AdminStatus).admin_access === true;
+      setAdminAccess(hasAccess);
+      
+      // Always continue polling regardless of access status
+      // This allows for both locking and unlocking dynamically
+    } catch (error) {
+      console.error('Error checking admin access:', error);
+      setAdminAccess(false);
+    }
+  };
+
+  const startAdminAccessPolling = () => {
+    // Clear any existing polling interval
+    if (pollingIntervalRef.current) {
+      clearInterval(pollingIntervalRef.current);
+    }
+    
+    // Set polling as active
+    isPollingActiveRef.current = true;
+    
+    // Start polling every 5 seconds
+    pollingIntervalRef.current = setInterval(async () => {
+      if (!isPollingActiveRef.current) {
+        return;
+      }
+      
+      try {
+        const { data, error } = await supabase
+          .from('admin_status')
+          .select('admin_access')
+          .single();
+        
+        if (error) {
+          console.error('Polling error:', error);
+          return;
+        }
+        
+        const hasAccess = data && (data as AdminStatus).admin_access === true;
+        
+        // Only update state if access status has changed
+        setAdminAccess(prevAccess => {
+          if (prevAccess !== hasAccess) {
+            console.log('Admin access status changed:', hasAccess ? 'Granted' : 'Denied');
+            
+            // If access is granted after being denied, continue polling
+            // If access is denied, we keep polling to check for re-enabling
+            // No need to stop polling anymore - always keep checking
+            
+            return hasAccess;
+          }
+          return prevAccess;
+        });
+        
+      } catch (error) {
+        console.error('Polling error:', error);
+      }
+    }, 5000); // Poll every 5 seconds
+  };
+
+  const stopAdminAccessPolling = () => {
+    isPollingActiveRef.current = false;
+    if (pollingIntervalRef.current) {
+      clearInterval(pollingIntervalRef.current);
+      pollingIntervalRef.current = null;
+    }
+  };
 
   const fetchEvents = async () => {
     const { data, error } = await supabase.from('events').select('*');
@@ -688,6 +795,36 @@ export default function AdminDashboard() {
     event.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Show loading state while checking admin access
+  if (adminAccess === null) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400 mx-auto mb-4"></div>
+          <p className="text-lg text-gray-400">Checking admin access...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show access denied message if admin access is false
+  if (adminAccess === false) {
+    return (
+      <div className="min-h-screen bg-black text-red-500 flex items-center justify-center">
+        <div className="text-center p-8 border border-red-500 rounded-lg bg-red-500/10">
+          <div className="text-6xl mb-4">🔒</div>
+          <h1 className="text-3xl font-bold mb-2">Admin Access has been locked by the Creator</h1>
+          <p className="text-lg text-red-400 mb-4">You do not have permission to access this page.</p>
+          <div className="flex items-center justify-center gap-2 text-sm text-gray-400">
+            <div className="animate-pulse w-2 h-2 bg-red-500 rounded-full"></div>
+            <span>Checking for access restoration...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Render the normal admin dashboard if access is granted
   return (
     <div className="min-h-screen bg-black text-white flex">
       <div className="w-2/5 p-6 border-r border-gray-700 relative">

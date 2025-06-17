@@ -178,60 +178,8 @@ export default function Clubs() {
               Cultural Clubs
             </span>
           </Link>
-
-          {/* Welfare Club */}
+         
           <Link
-            href={`/dashboard/${studentId}/clubs/welfare`}
-            className="flex flex-col items-center group relative"
-          >
-            <div className={`transform transition-all duration-1000 ${
-              isLoaded ? 'opacity-100 translate-y-0 scale-100 rotate-0' : 'opacity-0 translate-y-20 scale-50 rotate-180'
-            }`}
-            style={{ animationDelay: '0.9s' }}>
-              {/* Magical circle border */}
-              <div className="absolute inset-0 w-80 h-80 rounded-full border-2 border-green-400/30 animate-spin-slow opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="absolute inset-0 w-80 h-80 rounded-full border border-green-300/20 animate-pulse" />
-              
-              {/* Main club circle */}
-              <div className="w-70 h-70 rounded-full overflow-hidden border-4 border-white group-hover:border-green-400 shadow-2xl transition-all duration-500 relative animate-float-gentle group-hover:scale-110 group-hover:shadow-green-500/50" style={{ animationDelay: '2s' }}>
-                <Image
-                  src="/images/clubs/welfare.jpg"
-                  alt="Welfare Clubs"
-                  fill
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-                {/* Hover overlay */}
-                <div className="absolute inset-0 bg-green-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </div>
-              
-              {/* Glowing orbs around the circle */}
-              <div className="absolute inset-0 w-80 h-80 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                {[...Array(6)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="absolute w-3 h-3 bg-green-400 rounded-full animate-orbit"
-                    style={{
-                      animationDelay: `${i * 0.5}s`,
-                      transform: `rotate(${i * 60}deg) translateX(140px)`
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-            
-            <span className={`mt-4 text-white text-lg font-semibold group-hover:text-green-300 transition-all duration-500 transform ${
-              isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`}
-            style={{ 
-              animationDelay: '1.2s',
-              textShadow: '0 0 10px rgba(255,255,255,0.3)'
-            }}>
-              Welfare Clubs
-            </span>
-          </Link>
-
-          {/* Other Clubs */}
-          {/*<Link
             href={`/dashboard/${studentId}/clubs/other`}
             className="flex flex-col items-center group relative"
           >
@@ -239,22 +187,23 @@ export default function Clubs() {
               isLoaded ? 'opacity-100 translate-y-0 scale-100 rotate-0' : 'opacity-0 translate-y-20 scale-50 rotate-180'
             }`}
             style={{ animationDelay: '1.1s' }}>
-              {/* Magical circle border 
+            
               <div className="absolute inset-0 w-80 h-80 rounded-full border-2 border-orange-400/30 animate-spin-slow opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="absolute inset-0 w-80 h-80 rounded-full border border-orange-300/20 animate-pulse" />
               
-              {/* Main club circle 
+
               <div className="w-70 h-70 rounded-full overflow-hidden border-4 border-white group-hover:border-orange-400 shadow-2xl transition-all duration-500 relative animate-float-gentle group-hover:scale-110 group-hover:shadow-orange-500/50" style={{ animationDelay: '3s' }}>
-                <img
+                <Image
                   src="/images/clubs/other.jpg"
                   alt="Other Clubs"
+                  fill
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
-                {/* Hover overlay 
+
                 <div className="absolute inset-0 bg-orange-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
               
-              {/* Glowing orbs around the circle 
+
               <div className="absolute inset-0 w-80 h-80 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                 {[...Array(6)].map((_, i) => (
                   <div
@@ -276,10 +225,16 @@ export default function Clubs() {
               animationDelay: '1.4s',
               textShadow: '0 0 10px rgba(255,255,255,0.3)'
             }}>
-              Other Clubs
+              Sports Clubs
             </span>
-          </Link>*/}
+          </Link>
         </div>
+
+        <div className="absolute bottom-7 left-0 w-full text-center">
+        <p className="text-gray-400 text-sm">
+          More clubs are present here. You will discover them once you arrive. These are the most famous ones
+        </p>
+      </div>
 
         {/* Bottom magical glow */}
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-purple-900/30 to-transparent opacity-60" />

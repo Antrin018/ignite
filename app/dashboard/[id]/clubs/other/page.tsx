@@ -4,48 +4,98 @@ import Image from 'next/image';
 
 const OtherClubs = [
   {
-    name: 'PSIT',
-    role: 'physics Club',
-    img: '/images/clubs/psit.png', // Replace with your actual image filename
-    desc: 'For the physics enthusiasts.',
+    name: 'IISER Badminton Club',
+    role: 'badminton',
+    img: '/images/clubs/badminton.webp', // Replace with your actual image filename
+    desc: '',
     whatsapp:'',
-    insta: 'https://instagram.com/echobeats',
+    insta: '',
     gradient: 'bg-gradient-to-b from-yellow-200 to-yellow-100'
   },
   {
-    name: 'CSIT',
-    role: 'chemistry Club',
-    img: '/images/clubs/csit.jpeg', // Replace with your actual image filename
-    desc: 'For the chemistry enthusiasts',
+    name: 'Table Tennis Club',
+    role: 'Table Tennis',
+    img: '/images/clubs/table.webp', // Replace with your actual image filename
+    desc: '',
     whatsapp:'',
     insta: 'https://instagram.com/pixelpulse',
     gradient: 'bg-gradient-to-b from-pink-200 to-pink-100'
   },
   {
-    name: 'Proteus',
-    role: 'Biology Club',
-    img: '/images/clubs/proteus.jpg', // Replace with your actual image filename
-    desc: 'For the biology enthusiasts',
+    name: 'Football Club',
+    role: 'Football',
+    img: '/images/clubs/football.webp', // Replace with your actual image filename
+    desc: '',
     whatsapp:'',
-    insta: 'https://instagram.com/stageflare',
+    insta: '',
     gradient: 'bg-gradient-to-b from-blue-200 to-blue-100'
   },
   {
-    name: 'CMIT',
-    role: 'Maths Club',
-    img: '/images/clubs/cmit.png', // Replace with your actual image filename
-    desc: 'For the mathematics enthusiasts',
+    name: 'Athletics Club',
+    role: 'Athletics',
+    img: '/images/clubs/ath.avif', // Replace with your actual image filename
+    desc: '',
     whatsapp:'',
-    insta: 'https://instagram.com/dancedna',
+    insta: '',
     gradient: 'bg-gradient-to-b from-orange-200 to-orange-100'
   },
   {
-    name: 'Parsec',
-    role: 'Astronomy Club',
-    img: '/images/clubs/parsec.jpg', // Replace with your actual image filename
-    desc: 'For the astronomy enthusiasts',
+    name: 'Kho Kho Club',
+    role: 'Kho-Kho',
+    img: '/images/clubs/kho.webp', // Replace with your actual image filename
+    desc: '',
     whatsapp:'',
-    insta: 'https://instagram.com/arthive',
+    insta: '',
+    gradient: 'bg-gradient-to-b from-purple-200 to-purple-100'
+  },
+
+  {
+    name: 'Chess Corner',
+    role: 'Chess',
+    img: '/images/clubs/chess.jpg', // Replace with your actual image filename
+    desc: '',
+    whatsapp:'',
+    insta: '',
+    gradient: 'bg-gradient-to-b from-purple-200 to-purple-100'
+  },
+
+  {
+    name: 'Cricket Club',
+    role: 'Cricket',
+    img: '/images/clubs/cricket.webp', // Replace with your actual image filename
+    desc: '',
+    whatsapp:'',
+    insta: '',
+    gradient: 'bg-gradient-to-b from-purple-200 to-purple-100'
+  },
+
+  {
+    name: 'Carrom Club',
+    role: 'Carrom',
+    img: '/images/clubs/carr.avif', // Replace with your actual image filename
+    desc: '',
+    whatsapp:'',
+    insta: '',
+    gradient: 'bg-gradient-to-b from-purple-200 to-purple-100'
+  },
+
+  {
+    name: 'Kabaddi club',
+    role: 'Kabaddi',
+    img: '/images/clubs/kab.jpg', // Replace with your actual image filename
+    desc: '',
+    whatsapp:'',
+    insta: '',
+    gradient: 'bg-gradient-to-b from-purple-200 to-purple-100'
+  },
+
+  {
+    name: 'Tennis Club',
+    role: 'Tennis',
+    img: '/images/clubs/Tennis.jpg', // Replace with your actual image filename
+    desc: '',
+    whatsapp:'',
+    insta: '',
     gradient: 'bg-gradient-to-b from-purple-200 to-purple-100'
   },
 ];
@@ -116,11 +166,11 @@ export default function OClubs() {
       {/* Header */}
       <div className="text-center mb-16">
         <div className="inline-block">
-          <span className="text-red-500 text-sm font-semibold tracking-wider uppercase">Science</span>
+          <span className="text-red-500 text-sm font-semibold tracking-wider uppercase">Sports</span>
           <h1 className="text-4xl md:text-6xl font-bold text-white mt-2 mb-4">
             CLUBS OF IISER TVM
           </h1>
-          <p className="text-gray-400 text-lg">Discover the scientific spirits of our campus</p>
+          <p className="text-gray-400 text-lg">Discover the athletic spirits of our campus</p>
         </div>
       </div>
 
@@ -247,6 +297,9 @@ export default function OClubs() {
 
       {/* Instructions */}
       <div className="text-center mt-12">
+        <p className="text-gray-400 text-sm">
+          The instagram and whatsapp for these groups are not available. These are not the official logos of these clubs
+        </p>
         <p className="text-gray-400 text-sm">
           Hover to preview • Click to expand • Click again to close
         </p>

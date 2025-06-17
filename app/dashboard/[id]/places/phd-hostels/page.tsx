@@ -91,7 +91,7 @@ export default function Indoor() {
             className="bg-black/60 rounded-2xl p-6 mx-6 text-white text-center text-3xl font-semibold max-w-3xl cursor-pointer hover:bg-black/70 transition-all duration-300 animate-pulse"
             onClick={handleTextClick}
           >
-            This is the Indoor Stadium: This is the place where most of the sports activities and cultural festivals are conducted
+            These are the PHD Hostels.
           </div>
         </div>
       </div>

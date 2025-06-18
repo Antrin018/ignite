@@ -14,8 +14,8 @@ export default function Indoor() {
     },
     {
       name: "Bridge",
-      image: "/images/cafeteria.jpg", 
-      description: "Modern dining facility serving fresh meals and snacks"
+      image: "/images/nearby/bridge.jpeg", 
+      description: "Bridge that leads to shopping complex and health centre"
     },
     {
       name: "Way to cake-world",

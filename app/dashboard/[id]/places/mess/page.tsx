@@ -10,12 +10,12 @@ export default function Indoor() {
     {
       name: "J-Cafe",
       image: "/images/basketball-court.jpg",
-      description: "Full-size basketball court with professional lighting and seating"
+      description: "This is the cafe in the  upper floor of the mess"
     },
     {
       name: "Study Room",
-      image: "/images/cafeteria.jpg", 
-      description: "Modern dining facility serving fresh meals and snacks"
+      image: "/images/nearby/study-room.jpeg", 
+      description: "This is the study room in Anamudi A block"
     },
     {
       name: "Football Court",

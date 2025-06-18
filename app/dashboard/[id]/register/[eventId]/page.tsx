@@ -382,7 +382,7 @@ export default function EventRegisterPage() {
           {/* File size notice */}
           {(audioRequired || videoRequired) && (
             <p className="text-sm text-yellow-300 mb-4 text-center">
-              Maximum file size allowed: 50MB
+              Maximum file size allowed: 50MB. Warning: files once uploaded cannot be edited or deleted
             </p>
           )}
 
@@ -398,7 +398,7 @@ export default function EventRegisterPage() {
             <input className={inputStyle} placeholder="Your Email" value={email} disabled />
             <textarea
               className={`${inputStyle} resize-none`}
-              placeholder="What will you do in the event?"
+              placeholder="Describe your performance"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               required

@@ -9,13 +9,13 @@ export default function Indoor() {
   const places = [
     {
       name: "Basketball Court",
-      image: "/images/basketball-court.jpg",
-      description: "Full-size basketball court with professional lighting and seating"
+      image: "/images/nearby/basket.jpeg",
+      description: "Full-size basketball court"
     },
     {
       name: "Volleyball Court",
-      image: "/images/cafeteria.jpg", 
-      description: "Modern dining facility serving fresh meals and snacks"
+      image: "/images/nearby/volley.jpeg", 
+      description: "Volleyball ground"
     },
     {
       name: "Table Tennis Court",
@@ -25,7 +25,7 @@ export default function Indoor() {
 
     {
       name: "Tennis Court",
-      image: "/images/nearby/TT.jpeg",
+      image: "/images/nearby/tennis_court.jpeg",
       description: "We also have a Tennis Court"
     },
     {

@@ -9,8 +9,8 @@ export default function Indoor() {
   const places = [
     {
       name: "Zeika",
-      image: "/images/basketball-court.jpg",
-      description: "Full-size basketball court with professional lighting and seating"
+      image: "/images/nearby/zeika.jpeg",
+      description: "Another resturant here"
     },
     {
       name: "Stairway to Tasty",

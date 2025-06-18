@@ -12,7 +12,7 @@ export default function Indoor() {
     {
       name: "I-Cafe",
       image: "/images/basketball-court.jpg",
-      description: "Full-size basketball court with professional lighting and seating"
+      description: "Another cafe in cdh1"
     },
     {
       name: "Stairway to Science Blocks",

@@ -9,7 +9,7 @@ export default function Indoor() {
   const places = [
     {
       name: "J-Cafe",
-      image: "/images/basketball-court.jpg",
+      image: "/images/nearby/jcafe.jpeg",
       description: "This is the cafe in the  upper floor of the mess"
     },
     {

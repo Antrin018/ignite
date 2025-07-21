@@ -1,7 +1,7 @@
 'use client';
 
 import { ReactNode, useState, useEffect } from 'react';
-import { Home, MapPin, Users, Flame, Settings } from 'lucide-react';
+import { Home, MapPin, Users, Settings } from 'lucide-react';
 import { useRouter, useParams, usePathname } from 'next/navigation';
 
 interface Props {

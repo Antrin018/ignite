@@ -42,7 +42,6 @@ export default function DashboardLayout({ children }: Props) {
     { id: 'overview', icon: Home },
     { id: 'places', icon: MapPin },
     { id: 'clubs', icon: Users },
-    { id: 'freshers', icon: Flame },
     { id: 'settings', icon: Settings },
   ];
 

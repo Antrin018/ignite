@@ -1,7 +1,7 @@
 'use client';
 
 import { ReactNode, useState, useEffect } from 'react';
-import { Home, MapPin, Users, Settings } from 'lucide-react';
+import { Home, MapPin, Users, InfoIcon } from 'lucide-react';
 import { useRouter, useParams, usePathname } from 'next/navigation';
 
 interface Props {
@@ -42,7 +42,7 @@ export default function DashboardLayout({ children }: Props) {
     { id: 'overview', icon: Home },
     { id: 'places', icon: MapPin },
     { id: 'clubs', icon: Users },
-    { id: 'settings', icon: Settings },
+    { id: 'settings', icon: InfoIcon },
   ];
 
   return (

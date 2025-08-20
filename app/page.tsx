@@ -24,10 +24,6 @@ export default function HomePage() {
       return;
     }
   
-    if (!email.endsWith('25@iisertvm.ac.in')) {
-      setMessage('Only Batch-25 students and iiser mail ids are allowed.');
-      return;
-    }
   
     setLoading(true);
   

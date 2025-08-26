@@ -16,7 +16,7 @@ export default function SponsorsPage() {
       category: 'Comfort Partner',
       logo: '',
       description: 'Custom Hostel Single mattress',
-      videoUrl: '/video/sponsor.mp4',
+      videoUrl: '/images/sponsor.mp4',
       website: 'https://form.jotform.com/Hosteller/hostel-essential-order-request-form',
       benefits: ['Motion absorption technology', 'Hassle-free Hostel delivery', 'One Year Warranty'],
       stats: { students: 250, events: 15, years: 5 },

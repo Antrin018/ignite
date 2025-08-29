@@ -174,7 +174,7 @@ export default function SponsorsPage() {
                         <div className="flex items-center flex-wrap gap-2">
                           <span className="text-gray-200">Use Coupon Code:</span>
                           <span className="px-3 py-1 bg-gradient-to-r from-yellow-400 to-yellow-500 text-black rounded-lg font-bold text-sm animate-bounce-subtle border-2 border-yellow-300">
-                            FRESHERS1000
+                            FRESHERS1300
                           </span>
                         </div>
                       </div>

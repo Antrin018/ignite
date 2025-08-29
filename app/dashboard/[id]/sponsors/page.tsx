@@ -169,7 +169,7 @@ export default function SponsorsPage() {
                       {/* Offer Details */}
                       <div className="mb-6">
                         <p className="text-white text-lg font-medium mb-2">
-                          Grab Your Foam Mattress at <span className="text-yellow-400 font-bold text-xl">₹1999</span> with 1-Year Warranty!
+                          Grab Your Foam Mattress at <span className="text-yellow-400 font-bold text-xl">₹1699</span> with 1-Year Warranty!
                         </p>
                         <div className="flex items-center flex-wrap gap-2">
                           <span className="text-gray-200">Use Coupon Code:</span>
@@ -188,7 +188,7 @@ export default function SponsorsPage() {
                       >
                         <ExternalLink className="mr-3 group-hover:rotate-12 transition-transform duration-300" size={20} />
                         <span className="relative">
-                          Order Now with FRESHERS1000
+                          Order Now with FRESHERS1300
                           <div className="absolute inset-0 bg-white/20 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         </span>
                       </a>

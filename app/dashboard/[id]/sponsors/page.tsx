@@ -16,7 +16,7 @@ export default function SponsorsPage() {
       category: 'Comfort Partner',
       logo: '',
       description: 'Custom Hostel Single mattress',
-      videoUrl: '/images/Sponsor.mp4',
+      videoUrl: '/video/sponsor.mp4',
       website: 'https://form.jotform.com/Hosteller/hostel-essential-order-request-form',
       benefits: ['Motion absorption technology', 'Hassle-free Hostel delivery', 'One Year Warranty'],
       stats: { students: 250, events: 15, years: 5 },
@@ -45,13 +45,13 @@ export default function SponsorsPage() {
       {/* Full overlay to cover white background */}
       <div className="absolute inset-0 rounded-3xl overflow-hidden bg-cover bg-center backdrop-blur-md" style={{ backgroundImage: "url('/images/ww1.jpeg')" }}>
         <div className="relative z-10 h-full overflow-y-auto scrollbar-hide">
-          <div className="p-8 space-y-8">
+          <div className="p-4 lg:p-8 space-y-6 lg:space-y-8">
           {/* Header Section */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold bg-orange-600 bg-clip-text text-transparent mb-4 animate-text-shimmer">
+          <div className="text-center mb-8 lg:mb-12">
+            <h1 className="text-3xl lg:text-4xl xl:text-5xl font-bold bg-orange-600 bg-clip-text text-transparent mb-4 animate-text-shimmer">
               Our Sponsors
             </h1>
-            <p className="text-white/50 text-lg max-w-3xl mx-auto leading-relaxed animate-slide-up">
+            <p className="text-white/50 text-base lg:text-lg max-w-3xl mx-auto leading-relaxed animate-slide-up px-4">
               Discover the incredible organizations that make our events possible and learn about the opportunities they offer to students like you.
             </p>
           </div>
@@ -62,11 +62,11 @@ export default function SponsorsPage() {
               <Star className="mr-3 text-yellow-400 animate-twinkle" size={28} />
               Featured Partners
             </h2>
-            <div className="flex gap-8 item-start">
+            <div className="flex flex-col lg:flex-row gap-8 items-start">
               {sponsors.filter(s => s.featured).map((sponsor) => (
-                <div key={sponsor.id} className="flex gap-8 items-start w-full">
-                  {/* Video Section - Left Side */}
-                  <div className="relative w-[900px] h-[600px] rounded-2xl overflow-hidden shadow-2xl animate-fade-in-scale">
+                <div key={sponsor.id} className="flex flex-col lg:flex-row gap-8 items-start w-full">
+                  {/* Video Section - Top on mobile, Left on desktop */}
+                  <div className="relative w-full lg:w-[900px] h-[300px] lg:h-[600px] rounded-2xl overflow-hidden shadow-2xl animate-fade-in-scale">
                     <video
                       src={sponsor.videoUrl}
                       className="w-full h-full object-cover"
@@ -107,16 +107,16 @@ export default function SponsorsPage() {
                   </div>
                   
 
-                  {/* Information Section - Right Side */}
-                  <div className="flex-1 space-y-8 animate-slide-in-right">
+                  {/* Information Section - Below video on mobile, Right side on desktop */}
+                  <div className="w-full lg:flex-1 space-y-6 lg:space-y-8 animate-slide-in-right">
                     {/* Sponsor Header */}
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
                         <div className="space-y-2">
-                          <h3 className="text-3xl font-bold text-white mb-1 tracking-tight animate-text-shimmer">
+                          <h3 className="text-2xl lg:text-3xl font-bold text-white mb-1 tracking-tight animate-text-shimmer">
                             {sponsor.description}
                           </h3>
-                          <div className="flex items-center gap-3 py-1.5">
+                          <div className="flex flex-wrap items-center gap-3 py-1.5">
                             <span className="px-4 py-1 bg-gradient-to-r  from-pink-500 to-red-500 backdrop-blur-sm text-white text-sm font-semibold rounded-full border border-orange-400/30">
                               {sponsor.category}
                             </span>
@@ -132,8 +132,8 @@ export default function SponsorsPage() {
                     </div>
 
                     {/* Enhanced Benefits Section */}
-                    <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 shadow-xl">
-                      <h4 className="font-bold text-white mb-4 flex items-center text-xl">
+                    <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm rounded-xl p-4 lg:p-6 border border-white/20 shadow-xl">
+                      <h4 className="font-bold text-white mb-4 flex items-center text-lg lg:text-xl">
                         <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-emerald-500 rounded-lg flex items-center justify-center mr-3 shadow-lg">
                           <GiftIcon size={16} className="text-white" />
                         </div>
@@ -150,7 +150,7 @@ export default function SponsorsPage() {
                               <CheckCircle className="w-5 h-5 text-green-400 group-hover:text-green-300 transition-colors duration-200" />
                               <div className="absolute inset-0 bg-green-400/20 rounded-full scale-0 group-hover:scale-150 transition-transform duration-300"></div>
                             </div>
-                            <span className="text-lg font-medium group-hover:text-gray-100 transition-colors duration-200">
+                            <span className="text-base lg:text-lg font-medium group-hover:text-gray-100 transition-colors duration-200">
                               {benefit}
                             </span>
                           </div>
@@ -159,7 +159,7 @@ export default function SponsorsPage() {
                     </div>
 
                     {/* Enhanced Combined Action Section */}
-                    <div className="bg-gradient-to-br from-orange-500/10 to-red-500/10 backdrop-blur-sm rounded-2xl p-6 border border-orange-400/30 shadow-xl animate-pulse-glow">
+                    <div className="bg-gradient-to-br from-orange-500/10 to-red-500/10 backdrop-blur-sm rounded-2xl p-4 lg:p-6 border border-orange-400/30 shadow-xl animate-pulse-glow">
                       {/* Special Offer Header */}
                       <div className="flex items-center mb-4">
                         <div className="w-3 h-3 bg-yellow-400 rounded-full mr-3 animate-ping"></div>
@@ -168,13 +168,13 @@ export default function SponsorsPage() {
                       
                       {/* Offer Details */}
                       <div className="mb-6">
-                        <p className="text-white text-lg font-medium mb-2">
-                          Grab Your Foam Mattress at <span className="text-yellow-400 font-bold text-xl">₹1699</span> with 1-Year Warranty!
+                        <p className="text-white text-base lg:text-lg font-medium mb-2">
+                          Grab Your Foam Mattress at <span className="text-yellow-400 font-bold text-lg lg:text-xl">₹1999</span> with 1-Year Warranty!
                         </p>
-                        <div className="flex items-center flex-wrap gap-2">
-                          <span className="text-gray-200">Use Coupon Code:</span>
-                          <span className="px-3 py-1 bg-gradient-to-r from-yellow-400 to-yellow-500 text-black rounded-lg font-bold text-sm animate-bounce-subtle border-2 border-yellow-300">
-                            FRESHERS1300
+                        <div className="flex flex-col sm:flex-row sm:items-center flex-wrap gap-2">
+                          <span className="text-gray-200 text-sm lg:text-base">Use Coupon Code:</span>
+                          <span className="px-3 py-1 bg-gradient-to-r from-yellow-400 to-yellow-500 text-black rounded-lg font-bold text-sm animate-bounce-subtle border-2 border-yellow-300 w-fit">
+                            FRESHERS1000
                           </span>
                         </div>
                       </div>
@@ -184,11 +184,11 @@ export default function SponsorsPage() {
                         href={sponsor.website}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group w-full inline-flex items-center justify-center bg-gradient-to-r from-orange-600 to-red-500 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-orange-500/25 active:scale-95"
+                        className="group w-full inline-flex items-center justify-center bg-gradient-to-r from-orange-600 to-red-500 text-white px-6 lg:px-8 py-3 lg:py-4 rounded-xl font-bold text-base lg:text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-orange-500/25 active:scale-95"
                       >
                         <ExternalLink className="mr-3 group-hover:rotate-12 transition-transform duration-300" size={20} />
                         <span className="relative">
-                          Order Now with FRESHERS1300
+                          Order Now with FRESHERS1000
                           <div className="absolute inset-0 bg-white/20 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         </span>
                       </a>

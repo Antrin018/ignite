@@ -49,7 +49,7 @@ export default function DashboardLayout({ children }: Props) {
   return (
     <div className="min-h-screen bg-black">
       {/* Mobile Navigation Bar - visible on screens smaller than lg */}
-      <nav className="lg:hidden bg-black border-b border-gray-800 px-4 py-3">
+      <nav className="lg:hidden bg-black px-4 py-3">
         <div className="flex items-center justify-between">
           {/* Mobile nav items */}
           <div className="flex items-center space-x-8 flex-1 justify-center relative">

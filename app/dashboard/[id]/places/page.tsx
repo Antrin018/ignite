@@ -58,14 +58,30 @@ export default function PlacesPage() {
   return (
     <DashboardLayout>
       <div className="relative w-full h-full">
-        {/* Main Background */}
+        {/* Mobile Landscape Orientation Message */}
+        <div className="lg:hidden portrait:flex hidden flex-col items-center justify-center h-full bg-gradient-to-br from-blue-900 to-purple-900 rounded-2xl">
+          <div className="text-center px-6">
+            <div className="text-6xl mb-4">📱</div>
+            <h2 className="text-2xl font-bold text-white mb-4">Better Experience in Landscape</h2>
+            <p className="text-gray-300 text-lg mb-6">
+              Please rotate your device to landscape mode for the best campus map experience
+            </p>
+            <div className="flex items-center justify-center space-x-2 text-yellow-400">
+              <div className="w-8 h-5 border-2 border-yellow-400 rounded animate-pulse"></div>
+              <span className="text-sm">→</span>
+              <div className="w-5 h-8 border-2 border-yellow-400 rounded"></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Background - Hidden in portrait mobile, always visible on desktop */}
         <div
-          className="relative w-full h-full bg-cover bg-center rounded-2xl overflow-hidden"
+          className="relative w-full h-full bg-cover bg-center rounded-2xl overflow-hidden portrait:hidden lg:block"
           style={{ backgroundImage: "url('/images/iiser.jpg')" }}
         >
           {/* Title Header */}
-          <div className="absolute top-6 left-6 z-20">
-            <h1 className="text-3xl md:text-5xl font-bold text-white text-left drop-shadow-lg">
+          <div className="absolute top-3 lg:top-6 left-3 lg:left-6 z-20">
+            <h1 className="text-2xl lg:text-3xl xl:text-5xl font-bold text-white text-left drop-shadow-lg">
               📍 Campus Map
             </h1>
           </div>
@@ -93,7 +109,7 @@ export default function PlacesPage() {
               {/* Place Link */}
               <Link 
                 href={`/dashboard/${studentId}/places/${place.id}`} 
-                className="block px-3 py-2 bg-yellow-400 text-black font-medium rounded-lg shadow-lg border-2 border-yellow-500 hover:bg-yellow-300 hover:scale-110 transition-all duration-300 text-sm whitespace-nowrap"
+                className="block px-2 lg:px-3 py-1 lg:py-2 bg-yellow-400 text-black font-medium rounded-lg shadow-lg border-2 border-yellow-500 hover:bg-yellow-300 hover:scale-110 transition-all duration-300 text-xs lg:text-sm whitespace-nowrap"
               >
                 {place.name}
               </Link>
@@ -102,15 +118,15 @@ export default function PlacesPage() {
             </div>
           ))}
 
-          <div className="absolute bottom-7 left-0 w-full text-center">
-                <p className="text-gray-300 text-sm">
-                  Click the place names to visit theit info page. On the info page, click the pulsating description box for more images.
+          <div className="absolute bottom-3 lg:bottom-7 left-0 w-full text-center px-4">
+                <p className="text-gray-300 text-xs lg:text-sm">
+                  Click the place names to visit their info page. On the info page, click the pulsating description box for more images.
                 </p>
               </div>
 
           {!hasAnimated && (
-            <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2">
-              <div className="bg-black/60 backdrop-blur-sm rounded-full px-6 py-2 text-white text-sm">
+            <div className="absolute bottom-12 lg:bottom-6 left-1/2 transform -translate-x-1/2">
+              <div className="bg-black/60 backdrop-blur-sm rounded-full px-4 lg:px-6 py-1 lg:py-2 text-white text-xs lg:text-sm">
                 Places loaded: {loadedMarkers.size}/{places.length}
               </div>
             </div>

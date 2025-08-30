@@ -230,7 +230,7 @@ export default function Clubs() {
           </Link>
         </div>
 
-        <div className="absolute bottom-4 lg:bottom-7 left-0 w-full text-center px-4">
+        <div className="absolute bottom-1 lg:bottom-7 left-0 w-full text-center px-4 hidden lg:block">
         <p className="text-gray-400 text-xs lg:text-sm">
           More clubs are present here. You will discover them once you arrive. These are the most famous ones
         </p>

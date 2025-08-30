@@ -58,8 +58,8 @@ export default function PlacesPage() {
   return (
     <DashboardLayout>
       <div className="relative w-full h-full">
-        {/* Mobile Landscape Orientation Message */}
-        <div className="lg:hidden portrait:flex hidden flex-col items-center justify-center h-full bg-gradient-to-br from-blue-900 to-purple-900 rounded-2xl">
+        {/* Mobile Portrait Orientation Message - Only show on mobile portrait */}
+        <div className="lg:hidden portrait:block landscape:hidden flex flex-col items-center justify-center h-full bg-gradient-to-br from-blue-900 to-purple-900 rounded-2xl">
           <div className="text-center px-6">
             <div className="text-6xl mb-4">📱</div>
             <h2 className="text-2xl font-bold text-white mb-4">Better Experience in Landscape</h2>
@@ -74,9 +74,9 @@ export default function PlacesPage() {
           </div>
         </div>
 
-        {/* Main Background - Hidden in portrait mobile, always visible on desktop */}
+        {/* Main Background - Show in landscape mobile and always on desktop */}
         <div
-          className="relative w-full h-full bg-cover bg-center rounded-2xl overflow-hidden portrait:hidden lg:block"
+          className="relative w-full h-full bg-cover bg-center rounded-2xl overflow-hidden portrait:hidden landscape:block lg:block"
           style={{ backgroundImage: "url('/images/iiser.jpg')" }}
         >
           {/* Title Header */}

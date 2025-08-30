@@ -40,7 +40,7 @@ export default function Clubs() {
   return (
     <DashboardLayout>
       <div
-        className="relative w-full h-screen bg-cover bg-center rounded-2xl overflow-hidden"
+        className="relative w-full h-full min-h-screen bg-cover bg-center rounded-2xl overflow-hidden"
         style={{ backgroundImage: "url('/images/club_main.jpg')" }}
       >
         {/* Magical overlay with pulsing effect */}
@@ -63,8 +63,8 @@ export default function Clubs() {
         </div>
 
         {/* Main title with summoning effect */}
-        <div className="absolute top-8 left-1/2 transform -translate-x-1/2 z-10">
-          <h1 className={`text-4xl md:text-6xl font-bold text-white text-center transition-all duration-1000 ${
+        <div className="absolute top-4 lg:top-8 left-1/2 transform -translate-x-1/2 z-10 px-4">
+          <h1 className={`text-2xl lg:text-4xl xl:text-6xl font-bold text-white text-center transition-all duration-1000 ${
             isLoaded ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 -translate-y-10 scale-75'
           }`}
           style={{ 
@@ -76,7 +76,7 @@ export default function Clubs() {
         </div>
 
         {/* Centered Club Circles with Summoning Animation */}
-        <div className="absolute inset-0 flex justify-center items-center gap-12 flex-wrap p-4">
+        <div className="absolute inset-0 flex flex-col lg:flex-row justify-center items-center gap-6 lg:gap-12 px-4 pt-20 lg:pt-0">
           {/* Science Club */}
           <Link
             href={`/dashboard/${studentId}/clubs/science`}
@@ -87,11 +87,11 @@ export default function Clubs() {
             }`}
             style={{ animationDelay: '0.5s' }}>
               {/* Magical circle border */}
-              <div className="absolute inset-0 w-80 h-80 rounded-full border-2 border-blue-400/30 animate-spin-slow opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="absolute inset-0 w-80 h-80 rounded-full border border-blue-300/20 animate-pulse" />
+              <div className="absolute inset-0 w-48 h-48 lg:w-80 lg:h-80 rounded-full border-2 border-blue-400/30 animate-spin-slow opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 w-48 h-48 lg:w-80 lg:h-80 rounded-full border border-blue-300/20 animate-pulse" />
               
               {/* Main club circle */}
-              <div className="w-70 h-70 rounded-full overflow-hidden border-4 border-white group-hover:border-blue-400 shadow-2xl transition-all duration-500 relative animate-float-gentle group-hover:scale-110 group-hover:shadow-blue-500/50">
+              <div className="w-50 h-50 lg:w-70 lg:h-70 rounded-full overflow-hidden border-4 border-white group-hover:border-blue-400 shadow-2xl transition-all duration-500 relative animate-float-gentle group-hover:scale-110 group-hover:shadow-blue-500/50">
               <Image
                 src="/images/clubs/science.jpg"
                 alt="Science Clubs"
@@ -103,21 +103,21 @@ export default function Clubs() {
               </div>
               
               {/* Glowing orbs around the circle */}
-              <div className="absolute inset-0 w-80 h-80 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              <div className="absolute inset-0 w-48 h-48 lg:w-80 lg:h-80 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                 {[...Array(6)].map((_, i) => (
                   <div
                     key={i}
-                    className="absolute w-3 h-3 bg-blue-400 rounded-full animate-orbit"
+                    className="absolute w-2 h-2 lg:w-3 lg:h-3 bg-blue-400 rounded-full animate-orbit-mobile lg:animate-orbit"
                     style={{
                       animationDelay: `${i * 0.5}s`,
-                      transform: `rotate(${i * 60}deg) translateX(140px)`
+                      transform: `rotate(${i * 60}deg)`
                     }}
                   />
                 ))}
               </div>
             </div>
             
-            <span className={`mt-4 text-white text-lg font-semibold group-hover:text-blue-300 transition-all duration-500 transform ${
+            <span className={`mt-2 lg:mt-4 text-white text-base lg:text-lg font-semibold group-hover:text-blue-300 transition-all duration-500 transform ${
               isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
             }`}
             style={{ 
@@ -138,11 +138,11 @@ export default function Clubs() {
             }`}
             style={{ animationDelay: '0.7s' }}>
               {/* Magical circle border */}
-              <div className="absolute inset-0 w-80 h-80 rounded-full border-2 border-pink-400/30 animate-spin-slow opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="absolute inset-0 w-80 h-80 rounded-full border border-pink-300/20 animate-pulse" />
+              <div className="absolute inset-0 w-48 h-48 lg:w-80 lg:h-80 rounded-full border-2 border-pink-400/30 animate-spin-slow opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 w-48 h-48 lg:w-80 lg:h-80 rounded-full border border-pink-300/20 animate-pulse" />
               
               {/* Main club circle */}
-              <div className="w-70 h-70 rounded-full overflow-hidden border-4 border-white group-hover:border-pink-400 shadow-2xl transition-all duration-500 relative animate-float-gentle group-hover:scale-110 group-hover:shadow-pink-500/50" style={{ animationDelay: '1s' }}>
+              <div className="w-50 h-50 lg:w-70 lg:h-70 rounded-full overflow-hidden border-4 border-white group-hover:border-pink-400 shadow-2xl transition-all duration-500 relative animate-float-gentle group-hover:scale-110 group-hover:shadow-pink-500/50" style={{ animationDelay: '1s' }}>
                 <Image
                   src="/images/clubs/cultural.jpg"
                   alt="Cultural Clubs"
@@ -154,21 +154,21 @@ export default function Clubs() {
               </div>
               
               {/* Glowing orbs around the circle */}
-              <div className="absolute inset-0 w-80 h-80 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              <div className="absolute inset-0 w-48 h-48 lg:w-80 lg:h-80 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                 {[...Array(6)].map((_, i) => (
                   <div
                     key={i}
-                    className="absolute w-3 h-3 bg-pink-400 rounded-full animate-orbit"
+                    className="absolute w-2 h-2 lg:w-3 lg:h-3 bg-pink-400 rounded-full animate-orbit-mobile lg:animate-orbit"
                     style={{
                       animationDelay: `${i * 0.5}s`,
-                      transform: `rotate(${i * 60}deg) translateX(140px)`
+                      transform: `rotate(${i * 60}deg)`
                     }}
                   />
                 ))}
               </div>
             </div>
             
-            <span className={`mt-4 text-white text-lg font-semibold group-hover:text-pink-300 transition-all duration-500 transform ${
+            <span className={`mt-2 lg:mt-4 text-white text-base lg:text-lg font-semibold group-hover:text-pink-300 transition-all duration-500 transform ${
               isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
             }`}
             style={{ 
@@ -188,11 +188,11 @@ export default function Clubs() {
             }`}
             style={{ animationDelay: '1.1s' }}>
             
-              <div className="absolute inset-0 w-80 h-80 rounded-full border-2 border-orange-400/30 animate-spin-slow opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="absolute inset-0 w-80 h-80 rounded-full border border-orange-300/20 animate-pulse" />
+              <div className="absolute inset-0 w-48 h-48 lg:w-80 lg:h-80 rounded-full border-2 border-orange-400/30 animate-spin-slow opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 w-48 h-48 lg:w-80 lg:h-80 rounded-full border border-orange-300/20 animate-pulse" />
               
 
-              <div className="w-70 h-70 rounded-full overflow-hidden border-4 border-white group-hover:border-orange-400 shadow-2xl transition-all duration-500 relative animate-float-gentle group-hover:scale-110 group-hover:shadow-orange-500/50" style={{ animationDelay: '3s' }}>
+              <div className="w-50 h-50 lg:w-70 lg:h-70 rounded-full overflow-hidden border-4 border-white group-hover:border-orange-400 shadow-2xl transition-all duration-500 relative animate-float-gentle group-hover:scale-110 group-hover:shadow-orange-500/50" style={{ animationDelay: '3s' }}>
                 <Image
                   src="/images/clubs/other.jpg"
                   alt="Other Clubs"
@@ -204,21 +204,21 @@ export default function Clubs() {
               </div>
               
 
-              <div className="absolute inset-0 w-80 h-80 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              <div className="absolute inset-0 w-48 h-48 lg:w-80 lg:h-80 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                 {[...Array(6)].map((_, i) => (
                   <div
                     key={i}
-                    className="absolute w-3 h-3 bg-orange-400 rounded-full animate-orbit"
+                    className="absolute w-2 h-2 lg:w-3 lg:h-3 bg-orange-400 rounded-full animate-orbit-mobile lg:animate-orbit"
                     style={{
                       animationDelay: `${i * 0.5}s`,
-                      transform: `rotate(${i * 60}deg) translateX(140px)`
+                      transform: `rotate(${i * 60}deg)`
                     }}
                   />
                 ))}
               </div>
             </div>
             
-            <span className={`mt-4 text-white text-lg font-semibold group-hover:text-orange-300 transition-all duration-500 transform ${
+            <span className={`mt-2 lg:mt-4 text-white text-base lg:text-lg font-semibold group-hover:text-orange-300 transition-all duration-500 transform ${
               isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
             }`}
             style={{ 
@@ -230,8 +230,8 @@ export default function Clubs() {
           </Link>
         </div>
 
-        <div className="absolute bottom-7 left-0 w-full text-center">
-        <p className="text-gray-400 text-sm">
+        <div className="absolute bottom-4 lg:bottom-7 left-0 w-full text-center px-4">
+        <p className="text-gray-400 text-xs lg:text-sm">
           More clubs are present here. You will discover them once you arrive. These are the most famous ones
         </p>
       </div>
@@ -261,6 +261,11 @@ export default function Clubs() {
           to { transform: rotate(360deg) translateX(140px) rotate(-360deg); }
         }
         
+        @keyframes orbit-mobile {
+          from { transform: rotate(0deg) translateX(80px) rotate(0deg); }
+          to { transform: rotate(360deg) translateX(80px) rotate(-360deg); }
+        }
+        
         .animate-float {
           animation: float 4s ease-in-out infinite;
         }
@@ -275,6 +280,10 @@ export default function Clubs() {
         
         .animate-orbit {
           animation: orbit 4s linear infinite;
+        }
+        
+        .animate-orbit-mobile {
+          animation: orbit-mobile 4s linear infinite;
         }
       `}</style>
     </DashboardLayout>

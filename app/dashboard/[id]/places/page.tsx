@@ -57,28 +57,9 @@ export default function PlacesPage() {
   const { id: studentId } = useParams();
   const [loadedMarkers, setLoadedMarkers] = useState(new Set());
   const [hasAnimated, setHasAnimated] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  useEffect(() => {
-    if (isMobile) {
-      // For mobile, just show all items immediately
-      setLoadedMarkers(new Set(places.map((_, index) => index)));
-      setHasAnimated(true);
-      return;
-    }
-
-    // Desktop behavior - same as before
+    // Desktop animation logic
     const animationShown = sessionStorage.getItem('campusMapAnimationShown');
     
     if (!animationShown) {
@@ -96,7 +77,7 @@ export default function PlacesPage() {
       setLoadedMarkers(new Set(places.map((_, index) => index)));
       setHasAnimated(true);
     }
-  }, [isMobile]);
+  }, []);
 
   // Group places by category for mobile view
   const groupedPlaces = places.reduce((acc, place) => {
@@ -107,71 +88,13 @@ export default function PlacesPage() {
     return acc;
   }, {} as Record<CategoryType, Place[]>);
 
-  if (isMobile) {
-    return (
-      <DashboardLayout>
-        <div className="relative w-full h-full">
-          {/* Mobile Background */}
-          <div
-            className="relative w-full h-full bg-cover bg-center rounded-2xl overflow-hidden"
-            style={{ backgroundImage: "url('/images/indoor.jpg')" }}
-          >
-            {/* Overlay for better text readability */}
-            <div className="absolute inset-0 bg-black/40 rounded-2xl"></div>
-            
-            {/* Title Header */}
-            <div className="absolute top-4 left-4 right-4 z-20">
-              <h1 className="text-2xl font-bold text-white text-center drop-shadow-lg mb-2">
-                📍 Campus Directory
-              </h1>
-            </div>
-
-            {/* Scrollable Content Area */}
-            <div className="absolute top-16 left-4 right-4 bottom-16 z-10 overflow-y-auto">
-              <div className="space-y-4">
-                {(Object.entries(groupedPlaces) as [CategoryType, Place[]][]).map(([category, categoryPlaces]) => (
-                  <div key={category} className="bg-black/30 border border-white/5 rounded-lg p-4">
-                    <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
-                      <span className="text-xl">{categoryIcons[category]}</span>
-                      {categoryNames[category]}
-                    </h3>
-                    <div className="space-y-2">
-                      {categoryPlaces.map((place) => (
-                        <Link
-                          key={place.id}
-                          href={`/dashboard/${studentId}/places/${place.id}`}
-                          className="block w-full text-left px-3 py-2 bg-white/7 text-yellow-500 font-medium rounded-lg shadow-lg  hover:bg-yellow-300 transition-all duration-300 text-sm"
-                        >
-                          {place.name}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Footnote */}
-            <div className="absolute bottom-3 left-4 right-4 text-center">
-              <p className="text-gray-300 text-xs italic">
-                * Marked map view is not available in mobile view
-              </p>
-            </div>
-          </div>
-        </div>
-      </DashboardLayout>
-    );
-  }
-
-  // Desktop view - same as before
   return (
     <DashboardLayout>
       <div className="relative w-full h-full">
-        {/* Main Background */}
-        <div
-          className="relative w-full h-full bg-cover bg-center rounded-2xl overflow-hidden"
-          style={{ backgroundImage: "url('/images/iiser.jpg')" }}
-        >
+        {/* Desktop View */}
+        <div className="desktop-view relative w-full h-full bg-cover bg-center rounded-2xl overflow-hidden"
+             style={{ backgroundImage: "url('/images/iiser.jpg')" }}>
+          
           {/* Title Header */}
           <div className="absolute top-3 lg:top-6 left-3 lg:left-6 z-20">
             <h1 className="text-2xl lg:text-3xl xl:text-5xl font-bold text-white text-left drop-shadow-lg">
@@ -179,7 +102,7 @@ export default function PlacesPage() {
             </h1>
           </div>
 
-          {/* Place Markers with Pop-up Animation and Pulsating Circles */}
+          {/* Place Markers */}
           {places.map((place, index) => (
             <div
               key={place.id}
@@ -194,12 +117,10 @@ export default function PlacesPage() {
                 transitionDelay: `${index * 50}ms`
               }}
             >
-              {/* Pulsating Circle */}
               <div className="absolute -left-6 top-1/2 transform -translate-y-1/2">
                 <div className="w-3 h-3 bg-orange-600 rounded-full pulse-circle"></div>
               </div>
               
-              {/* Place Link */}
               <Link 
                 href={`/dashboard/${studentId}/places/${place.id}`} 
                 className="block px-2 lg:px-3 py-1 lg:py-2 bg-yellow-400 text-black font-medium rounded-lg shadow-lg border-2 border-yellow-500 hover:bg-yellow-300 hover:scale-110 transition-all duration-300 text-xs lg:text-sm whitespace-nowrap"
@@ -224,7 +145,72 @@ export default function PlacesPage() {
           )}
         </div>
 
+        {/* Mobile View */}
+        <div className="mobile-view relative w-full h-full bg-cover bg-center rounded-2xl overflow-hidden"
+             style={{ backgroundImage: "url('/images/iiser.jpg')" }}>
+          
+          {/* Overlay for better text readability */}
+          <div className="absolute inset-0 bg-black/40 rounded-2xl"></div>
+          
+          {/* Title Header */}
+          <div className="absolute top-4 left-4 right-4 z-20">
+            <h1 className="text-2xl font-bold text-white text-center drop-shadow-lg mb-2">
+              📍 Campus Directory
+            </h1>
+          </div>
+
+          {/* Scrollable Content Area */}
+          <div className="absolute top-16 left-4 right-4 bottom-16 z-10 overflow-y-auto">
+            <div className="space-y-4">
+              {(Object.entries(groupedPlaces) as [CategoryType, Place[]][]).map(([category, categoryPlaces]) => (
+                <div key={category} className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                  <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+                    <span className="text-xl">{categoryIcons[category]}</span>
+                    {categoryNames[category]}
+                  </h3>
+                  <div className="space-y-2">
+                    {categoryPlaces.map((place) => (
+                      <Link
+                        key={place.id}
+                        href={`/dashboard/${studentId}/places/${place.id}`}
+                        className="block w-full text-left px-3 py-2 bg-yellow-400 text-black font-medium rounded-lg shadow-lg border border-yellow-500 hover:bg-yellow-300 transition-all duration-300 text-sm"
+                      >
+                        {place.name}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Footnote */}
+          <div className="absolute bottom-3 left-4 right-4 text-center">
+            <p className="text-gray-300 text-xs italic">
+              * Marked map view is not available in mobile view
+            </p>
+          </div>
+        </div>
+
         <style jsx>{`
+          /* Desktop styles */
+          .desktop-view {
+            display: block;
+          }
+          .mobile-view {
+            display: none;
+          }
+
+          /* Mobile styles */
+          @media (max-width: 767px) {
+            .desktop-view {
+              display: none;
+            }
+            .mobile-view {
+              display: block;
+            }
+          }
+
           @keyframes popIn {
             0% {
               opacity: 0;

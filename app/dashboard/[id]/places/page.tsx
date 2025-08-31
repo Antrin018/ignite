@@ -62,14 +62,21 @@ export default function PlacesPage() {
   useEffect(() => {
     // Check if mobile device is in landscape mode
     const checkMobileLandscape = () => {
-      const isMobile = window.innerWidth <= 768;
+      const isMobile = window.innerWidth <= 1024; // Increased range to include tablets
       const isLandscape = window.innerWidth > window.innerHeight;
-      setIsMobileLandscape(isMobile && isLandscape);
+      const mobileLandscape = isMobile && isLandscape;
+      console.log('Mobile landscape check:', { isMobile, isLandscape, mobileLandscape, width: window.innerWidth, height: window.innerHeight });
+      setIsMobileLandscape(mobileLandscape);
+    };
+
+    const handleOrientationChange = () => {
+      // Add a small delay for orientation change to get correct dimensions
+      setTimeout(checkMobileLandscape, 100);
     };
 
     checkMobileLandscape();
     window.addEventListener('resize', checkMobileLandscape);
-    window.addEventListener('orientationchange', checkMobileLandscape);
+    window.addEventListener('orientationchange', handleOrientationChange);
 
     // Desktop animation logic
     const animationShown = sessionStorage.getItem('campusMapAnimationShown');
@@ -92,7 +99,7 @@ export default function PlacesPage() {
 
     return () => {
       window.removeEventListener('resize', checkMobileLandscape);
-      window.removeEventListener('orientationchange', checkMobileLandscape);
+      window.removeEventListener('orientationchange', handleOrientationChange);
     };
   }, []);
 
@@ -117,6 +124,12 @@ export default function PlacesPage() {
             <h1 className="text-2xl lg:text-3xl xl:text-5xl font-bold text-white text-left drop-shadow-lg">
               📍 Campus Map
             </h1>
+            {/* Debug indicator */}
+            {isMobileLandscape && (
+              <div className="bg-red-500 text-white px-2 py-1 text-xs rounded mt-2">
+                Mobile Landscape Mode Active
+              </div>
+            )}
           </div>
 
           {/* Place Markers */}

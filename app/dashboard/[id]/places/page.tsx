@@ -91,8 +91,8 @@ export default function PlacesPage() {
   return (
     <DashboardLayout>
       <div className="relative w-full h-full">
-        {/* Desktop View */}
-        <div className="desktop-view relative w-full h-full bg-cover bg-center rounded-2xl overflow-hidden"
+        {/* Desktop View - Hidden on mobile */}
+        <div className="hidden md:block relative w-full h-full bg-cover bg-center rounded-2xl overflow-hidden"
              style={{ backgroundImage: "url('/images/iiser.jpg')" }}>
           
           {/* Title Header */}
@@ -106,7 +106,7 @@ export default function PlacesPage() {
           {places.map((place, index) => (
             <div
               key={place.id}
-              className={`absolute transform -translate-x-1/2 -translate-y-1/2 ${
+              className={`absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ease-out ${
                 loadedMarkers.has(index) 
                   ? 'opacity-100 scale-100 translate-y-0' 
                   : 'opacity-0 scale-0 translate-y-4'
@@ -118,7 +118,7 @@ export default function PlacesPage() {
               }}
             >
               <div className="absolute -left-6 top-1/2 transform -translate-y-1/2">
-                <div className="w-3 h-3 bg-orange-600 rounded-full pulse-circle"></div>
+                <div className="w-3 h-3 bg-orange-600 rounded-full animate-pulse"></div>
               </div>
               
               <Link 
@@ -145,8 +145,8 @@ export default function PlacesPage() {
           )}
         </div>
 
-        {/* Mobile View */}
-        <div className="mobile-view relative w-full h-full bg-cover bg-center rounded-2xl overflow-hidden"
+        {/* Mobile View - Hidden on desktop */}
+        <div className="block md:hidden relative w-full h-full bg-cover bg-center rounded-2xl overflow-hidden"
              style={{ backgroundImage: "url('/images/iiser.jpg')" }}>
           
           {/* Overlay for better text readability */}
@@ -192,54 +192,7 @@ export default function PlacesPage() {
           </div>
         </div>
 
-        <style jsx>{`
-          /* Desktop styles */
-          .desktop-view {
-            display: block;
-          }
-          .mobile-view {
-            display: none;
-          }
 
-          /* Mobile styles */
-          @media (max-width: 767px) {
-            .desktop-view {
-              display: none;
-            }
-            .mobile-view {
-              display: block;
-            }
-          }
-
-          @keyframes popIn {
-            0% {
-              opacity: 0;
-              transform: translate(-50%, -50%) scale(0) translateY(20px);
-            }
-            80% {
-              transform: translate(-50%, -50%) scale(1.1) translateY(-5px);
-            }
-            100% {
-              opacity: 1;
-              transform: translate(-50%, -50%) scale(1) translateY(0);
-            }
-          }
-
-          @keyframes pulse {
-            0%, 100% {
-              opacity: 1;
-              transform: scale(1);
-            }
-            50% {
-              opacity: 0.7;
-              transform: scale(1.2);
-            }
-          }
-
-          .pulse-circle {
-            animation: pulse 2s ease-in-out infinite;
-          }
-        `}</style>
       </div>
     </DashboardLayout>
   );

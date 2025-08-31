@@ -35,6 +35,27 @@ const places: Place[] = [
   { id: 'kathinpara', name: 'Way to Kathinpara', top: '0%', left: '38%', category: 'entrance' }
 ];
 
+// Optimized coordinates for landscape mode map pins
+const landscapePinPositions: Record<string, { top: string; left: string }> = {
+  'main': { top: '50%', left: '27%' },
+  'indoor': { top: '58%', left: '37%' },
+  'mess': { top: '71%', left: '48%' },
+  'anamudi': { top: '85%', left: '48%' },
+  'phd-hostels': { top: '40%', left: '57%' },
+  'cdh1': { top: '30%', left: '60%' },
+  'cake-world': { top: '13%', left: '52%' },
+  'tasty': { top: '14%', left: '42%' },
+  'red-cafe': { top: '5%', left: '48%' },
+  'msb': { top: '-10%', left: '46%' },
+  'lhc': { top: '-10%', left: '54%' },
+  'psb': { top: '2%', left: '50%' },
+  'library': { top: '7%', left: '39%' },
+  'csb': { top: '5%', left: '58%' },
+  'bsb': { top: '15%', left: '65%' },
+  'health': { top: '-2%', left: '37%' },
+  'kathinpara': { top: '-2%', left: '37%' }
+};
+
 const categoryIcons: Record<CategoryType, string> = {
   entrance: '🚪',
   sports: '🏃‍♂️',
@@ -133,44 +154,50 @@ export default function PlacesPage() {
           </div>
 
           {/* Place Markers */}
-          {places.map((place, index) => (
-            <div
-              key={place.id}
-              className={`absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ease-out ${
-                loadedMarkers.has(index) 
-                  ? 'opacity-100 scale-100 translate-y-0' 
-                  : 'opacity-0 scale-0 translate-y-4'
-              }`}
-              style={{ 
-                top: place.top, 
-                left: place.left,
-                transitionDelay: `${index * 50}ms`
-              }}
-            >
-              {isMobileLandscape ? (
-                // Simple map pin icon for mobile landscape
-                <Link 
-                  href={`/dashboard/${studentId}/places/${place.id}`} 
-                  className="block hover:scale-125 transition-all duration-300"
-                  title={place.name}
-                >
-                  <svg 
-                    width="24" 
-                    height="24" 
-                    viewBox="0 0 24 24" 
-                    fill="none" 
-                    className="drop-shadow-lg"
+          {places.map((place, index) => {
+            // Use landscape-specific coordinates when in mobile landscape mode
+            const position = isMobileLandscape && landscapePinPositions[place.id] 
+              ? landscapePinPositions[place.id] 
+              : { top: place.top, left: place.left };
+            
+            return (
+              <div
+                key={place.id}
+                className={`absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ease-out ${
+                  loadedMarkers.has(index) 
+                    ? 'opacity-100 scale-100 translate-y-0' 
+                    : 'opacity-0 scale-0 translate-y-4'
+                }`}
+                style={{ 
+                  top: position.top, 
+                  left: position.left,
+                  transitionDelay: `${index * 50}ms`
+                }}
+              >
+                {isMobileLandscape ? (
+                  // Simple map pin icon for mobile landscape
+                  <Link 
+                    href={`/dashboard/${studentId}/places/${place.id}`} 
+                    className="block hover:scale-125 transition-all duration-300"
+                    title={place.name}
                   >
-                    <path 
-                      d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" 
-                      fill="#EF4444" 
-                      stroke="#DC2626" 
-                      strokeWidth="1"
-                    />
-                    <circle cx="12" cy="9" r="2.5" fill="white" />
-                  </svg>
-                </Link>
-              ) : (
+                    <svg 
+                      width="24" 
+                      height="24" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      className="drop-shadow-lg"
+                    >
+                      <path 
+                        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" 
+                        fill="#EF4444" 
+                        stroke="#DC2626" 
+                        strokeWidth="1"
+                      />
+                      <circle cx="12" cy="9" r="2.5" fill="white" />
+                    </svg>
+                  </Link>
+                ) : (
                 // Original design for desktop and mobile portrait
                 <>
                   <div className="absolute -left-6 top-1/2 transform -translate-y-1/2">
@@ -184,9 +211,10 @@ export default function PlacesPage() {
                     {place.name}
                   </Link>
                 </>
-              )}
-            </div>
-          ))}
+                )}
+              </div>
+            );
+          })}
 
           <div className="absolute bottom-3 lg:bottom-7 left-0 w-full text-center px-4">
             <p className="text-gray-300 text-xs lg:text-sm">

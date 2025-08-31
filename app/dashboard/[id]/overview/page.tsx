@@ -201,7 +201,7 @@ export default function FresherWelcomePage() {
               {/* Video Section */}
               <div className="relative w-full lg:w-1/2 h-64 lg:h-96">
                 <video
-                  src="/video/Sponsor.mp4"
+                  src="/images/Sponsor.mp4"
                   className="w-full h-full object-cover"
                   autoPlay
                   loop

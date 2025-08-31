@@ -1,26 +1,21 @@
 'use client';
-import DashboardLayout from '@/components/DashboardLayout';
+import MobilePlaceLayout from '@/components/MobilePlaceLayout';
 import { useRouter } from 'next/navigation';
 
-
-export default function MainGate() {
+export default function Library() {
   const router = useRouter();
-  const handleTextClick=()=>{
+  
+  const handleTextClick = () => {
     router.push('library/more');
-  }
+  };
   
   return (
-    <DashboardLayout>
-      <div
-        className="h-full w-full bg-cover bg-center rounded-2xl flex justify-center items-start pt-16"
-        style={{ backgroundImage: "url('/images/library.jpeg')" }}>
-          <div 
-            className="bg-black/60 rounded-2xl p-6 mx-6 text-white text-center text-3xl font-semibold max-w-3xl cursor-pointer hover:bg-black/70 transition-all duration-300 animate-pulse"
-            onClick={handleTextClick}
-          >
-        This is the Central Library of our college: We hav access to lots of books and journals both online and offline
-        </div>
-      </div>
-    </DashboardLayout>
+    <MobilePlaceLayout
+      backgroundImage="/images/library.jpeg"
+      title="📍 Central Library"
+      onContentClick={handleTextClick}
+    >
+      This is the Central Library of our college: We have access to lots of books and journals both online and offline
+    </MobilePlaceLayout>
   );
 }

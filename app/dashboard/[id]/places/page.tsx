@@ -57,8 +57,20 @@ export default function PlacesPage() {
   const { id: studentId } = useParams();
   const [loadedMarkers, setLoadedMarkers] = useState(new Set());
   const [hasAnimated, setHasAnimated] = useState(false);
+  const [isMobileLandscape, setIsMobileLandscape] = useState(false);
 
   useEffect(() => {
+    // Check if mobile device is in landscape mode
+    const checkMobileLandscape = () => {
+      const isMobile = window.innerWidth <= 768;
+      const isLandscape = window.innerWidth > window.innerHeight;
+      setIsMobileLandscape(isMobile && isLandscape);
+    };
+
+    checkMobileLandscape();
+    window.addEventListener('resize', checkMobileLandscape);
+    window.addEventListener('orientationchange', checkMobileLandscape);
+
     // Desktop animation logic
     const animationShown = sessionStorage.getItem('campusMapAnimationShown');
     
@@ -77,6 +89,11 @@ export default function PlacesPage() {
       setLoadedMarkers(new Set(places.map((_, index) => index)));
       setHasAnimated(true);
     }
+
+    return () => {
+      window.removeEventListener('resize', checkMobileLandscape);
+      window.removeEventListener('orientationchange', checkMobileLandscape);
+    };
   }, []);
 
   // Group places by category for mobile view
@@ -117,22 +134,53 @@ export default function PlacesPage() {
                 transitionDelay: `${index * 50}ms`
               }}
             >
-              <div className="absolute -left-6 top-1/2 transform -translate-y-1/2">
-                <div className="w-3 h-3 bg-orange-600 rounded-full animate-pulse"></div>
-              </div>
-              
-              <Link 
-                href={`/dashboard/${studentId}/places/${place.id}`} 
-                className="block px-2 lg:px-3 py-1 lg:py-2 bg-yellow-400 text-black font-medium rounded-lg shadow-lg border-2 border-yellow-500 hover:bg-yellow-300 hover:scale-110 transition-all duration-300 text-xs lg:text-sm whitespace-nowrap"
-              >
-                {place.name}
-              </Link>
+              {isMobileLandscape ? (
+                // Simple map pin icon for mobile landscape
+                <Link 
+                  href={`/dashboard/${studentId}/places/${place.id}`} 
+                  className="block hover:scale-125 transition-all duration-300"
+                  title={place.name}
+                >
+                  <svg 
+                    width="24" 
+                    height="24" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    className="drop-shadow-lg"
+                  >
+                    <path 
+                      d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" 
+                      fill="#EF4444" 
+                      stroke="#DC2626" 
+                      strokeWidth="1"
+                    />
+                    <circle cx="12" cy="9" r="2.5" fill="white" />
+                  </svg>
+                </Link>
+              ) : (
+                // Original design for desktop and mobile portrait
+                <>
+                  <div className="absolute -left-6 top-1/2 transform -translate-y-1/2">
+                    <div className="w-3 h-3 bg-orange-600 rounded-full animate-pulse"></div>
+                  </div>
+                  
+                  <Link 
+                    href={`/dashboard/${studentId}/places/${place.id}`} 
+                    className="block px-2 lg:px-3 py-1 lg:py-2 bg-yellow-400 text-black font-medium rounded-lg shadow-lg border-2 border-yellow-500 hover:bg-yellow-300 hover:scale-110 transition-all duration-300 text-xs lg:text-sm whitespace-nowrap"
+                  >
+                    {place.name}
+                  </Link>
+                </>
+              )}
             </div>
           ))}
 
           <div className="absolute bottom-3 lg:bottom-7 left-0 w-full text-center px-4">
             <p className="text-gray-300 text-xs lg:text-sm">
-              Click the place names to visit their info page. On the info page, click the pulsating description box for more images.
+              {isMobileLandscape 
+                ? "Tap the map pins to visit place info pages. Rotate to portrait for directory view."
+                : "Click the place names to visit their info page. On the info page, click the pulsating description box for more images."
+              }
             </p>
           </div>
 

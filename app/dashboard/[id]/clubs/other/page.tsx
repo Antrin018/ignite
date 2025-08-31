@@ -1,5 +1,6 @@
 'use client';
-import { useState } from 'react';
+
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
 const OtherClubs = [
@@ -103,9 +104,33 @@ const OtherClubs = [
 export default function OClubs() {
   const [selectedClub, setSelectedClub] = useState<number | null>(null);
   const [hoveredClub, setHoveredClub] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalClub, setModalClub] = useState<typeof OtherClubs[0] | null>(null);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handleClubClick = (index: number) => {
-    setSelectedClub(selectedClub === index ? null : index);
+    if (isMobile) {
+      setModalClub(OtherClubs[index]);
+      setModalOpen(true);
+    } else {
+      setSelectedClub(selectedClub === index ? null : index);
+    }
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setModalClub(null);
   };
 
   const handleClubHover = (index: number) => {
@@ -162,148 +187,277 @@ export default function OClubs() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 py-16 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 py-8 md:py-16 px-4">
       {/* Header */}
-      <div className="text-center mb-16">
+      <div className="text-center mb-8 md:mb-16">
         <div className="inline-block">
           <span className="text-red-500 text-sm font-semibold tracking-wider uppercase">Sports</span>
-          <h1 className="text-4xl md:text-6xl font-bold text-white mt-2 mb-4">
+          <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold text-white mt-2 mb-4">
             CLUBS OF IISER TVM
           </h1>
-          <p className="text-gray-400 text-lg">Discover the athletic spirits of our campus</p>
+          <p className="text-gray-400 text-base md:text-lg">Discover the athletic spirits of our campus</p>
         </div>
       </div>
 
-      {/* Clubs Cards Container */}
-      <div className="flex justify-center items-center min-h-[600px] max-w-7xl mx-auto relative overflow-hidden">
-        {OtherClubs.map((club, index) => (
-          <div
-            key={index}
-            className="absolute transition-all duration-700 ease-out"
-            style={{
-              transform: `${getCardTransform(index)} ${getCardScale(index)}`,
-              zIndex: getZIndex(index),
-              filter: selectedClub === index ? 'drop-shadow(0 15px 50px rgba(255,255,255,0.25))' : 'none'
-            }}
-          >
-            {/* Club Card */}
-            <div
-              className="cursor-pointer transition-all duration-700 ease-out"
-              onClick={() => handleClubClick(index)}
-              onMouseEnter={() => handleClubHover(index)}
-              onMouseLeave={handleClubLeave}
-            >
-              {/* Card Background with Image */}
-              <div 
-                className="rounded-3xl shadow-2xl transition-all duration-700 ease-out relative overflow-hidden"
-                style={{
-                  width: selectedClub === index ? '320px' : '224px',
-                  height: selectedClub === index ? '520px' : '384px',
-                }}
+      {/* Mobile Layout */}
+      {isMobile ? (
+        <div className="max-w-sm mx-auto">
+          <div className="grid grid-cols-2 gap-4">
+            {OtherClubs.map((club, index) => (
+              <div
+                key={index}
+                className={`${
+                  OtherClubs.length % 2 !== 0 && index === OtherClubs.length - 1
+                    ? 'col-span-2 max-w-[160px] mx-auto'
+                    : ''
+                }`}
               >
-                {/* Background Image */}
-                <div className="absolute inset-0">
-                  <Image
-                    src={club.img}
-                    alt={club.name}
-                    fill
-                    className="object-cover transition-transform duration-300 ease-out hover:scale-105"
-                  />
-                  {/* Overlay for better text readability */}
-                  <div className="absolute inset-0 bg-black/40 transition-all duration-300 ease-out"></div>
-                </div>
-
-                {/* Content Container */}
-                <div className="relative z-10 p-6 h-full flex flex-col">
-                  {/* Header Section */}
-                  <div className="text-center mb-auto">
-                    <h3 className={`font-bold text-white drop-shadow-lg transition-all duration-300 ease-out ${
-                      selectedClub === index ? 'text-2xl mb-2' : 'text-lg mb-1'
-                    }`}>
-                      {club.name}
-                    </h3>
-                    <p className={`text-white/90 font-medium drop-shadow-md transition-all duration-300 ease-out ${
-                      selectedClub === index ? 'text-base' : 'text-sm'
-                    }`}>
-                      {club.role}
-                    </p>
-                  </div>
-
-                  {/* Expanded Content */}
-                  <div className={`text-center transition-all duration-500 ease-out ${
-                    selectedClub === index 
-                      ? 'opacity-100 translate-y-0' 
-                      : 'opacity-0 translate-y-4 pointer-events-none'
-                  }`}>
-                    <p className="text-white text-lg italic mb-6 leading-relaxed drop-shadow-md">
-                      {club.desc}
-                    </p>
-                    <div className="flex justify-center gap-4">
-                      {/* Instagram Button */}
-                      <a
-                        href={club.insta}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full hover:from-purple-700 hover:to-pink-700 transition-all duration-300 ease-out transform hover:scale-110 shadow-lg hover:shadow-xl"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <svg 
-                          width="24" 
-                          height="24" 
-                          viewBox="0 0 24 24" 
-                          fill="currentColor"
-                          className="transition-transform duration-300 ease-out"
-                        >
-                          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                        </svg>
-                      </a>
-                      
-                      {/* WhatsApp Button */}
-                      <a
-                        href={club.whatsapp}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-full hover:from-green-600 hover:to-green-700 transition-all duration-300 ease-out transform hover:scale-110 shadow-lg hover:shadow-xl"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <svg 
-                          width="24" 
-                          height="24" 
-                          viewBox="0 0 24 24" 
-                          fill="currentColor"
-                          className="transition-transform duration-300 ease-out"
-                        >
-                          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.569-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
-                        </svg>
-                      </a>
+                <div
+                  className="cursor-pointer transition-all duration-300 ease-out transform hover:scale-105"
+                  onClick={() => handleClubClick(index)}
+                >
+                  <div className="rounded-2xl shadow-lg overflow-hidden bg-white/10 backdrop-blur-sm">
+                    <div className="aspect-square relative">
+                      <Image
+                        src={club.img}
+                        alt={club.name}
+                        fill
+                        className="object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black/30"></div>
+                    </div>
+                    <div className="p-3">
+                      <h3 className="text-white font-bold text-sm text-center mb-1">
+                        {club.name}
+                      </h3>
+                      <p className="text-white/80 text-xs text-center">
+                        {club.role}
+                      </p>
                     </div>
                   </div>
                 </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        /* Desktop Layout */
+        <div className="flex justify-center items-center min-h-[600px] max-w-7xl mx-auto relative overflow-hidden">
+          {OtherClubs.map((club, index) => (
+            <div
+              key={index}
+              className="absolute transition-all duration-700 ease-out"
+              style={{
+                transform: `${getCardTransform(index)} ${getCardScale(index)}`,
+                zIndex: getZIndex(index),
+                filter: selectedClub === index ? 'drop-shadow(0 15px 50px rgba(255,255,255,0.25))' : 'none'
+              }}
+            >
+              {/* Club Card */}
+              <div
+                className="cursor-pointer transition-all duration-700 ease-out"
+                onClick={() => handleClubClick(index)}
+                onMouseEnter={() => handleClubHover(index)}
+                onMouseLeave={handleClubLeave}
+              >
+                {/* Card Background with Image */}
+                <div 
+                  className="rounded-3xl shadow-2xl transition-all duration-700 ease-out relative overflow-hidden"
+                  style={{
+                    width: selectedClub === index ? '320px' : '224px',
+                    height: selectedClub === index ? '520px' : '384px',
+                  }}
+                >
+                  {/* Background Image */}
+                  <div className="absolute inset-0">
+                    <Image
+                      src={club.img}
+                      alt={club.name}
+                      fill
+                      className="object-cover transition-transform duration-300 ease-out hover:scale-105"
+                    />
+                    {/* Overlay for better text readability */}
+                    <div className="absolute inset-0 bg-black/40 transition-all duration-300 ease-out"></div>
+                  </div>
 
-                {/* Hover Indicator */}
-                {hoveredClub === index && selectedClub === null && (
-                  <div className="absolute inset-0 rounded-3xl border-2 border-white/50 animate-pulse"></div>
+                  {/* Content Container */}
+                  <div className="relative z-10 p-6 h-full flex flex-col">
+                    {/* Header Section */}
+                    <div className="text-center mb-auto">
+                      <h3 className={`font-bold text-white drop-shadow-lg transition-all duration-300 ease-out ${
+                        selectedClub === index ? 'text-2xl mb-2' : 'text-lg mb-1'
+                      }`}>
+                        {club.name}
+                      </h3>
+                      <p className={`text-white/90 font-medium drop-shadow-md transition-all duration-300 ease-out ${
+                        selectedClub === index ? 'text-base' : 'text-sm'
+                      }`}>
+                        {club.role}
+                      </p>
+                    </div>
+
+                    {/* Expanded Content */}
+                    <div className={`text-center transition-all duration-500 ease-out ${
+                      selectedClub === index 
+                        ? 'opacity-100 translate-y-0' 
+                        : 'opacity-0 translate-y-4 pointer-events-none'
+                    }`}>
+                      <p className="text-white text-lg italic mb-6 leading-relaxed drop-shadow-md">
+                        {club.desc}
+                      </p>
+                      <div className="flex justify-center gap-4">
+                        {/* Instagram Button */}
+                        <a
+                          href={club.insta}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full hover:from-purple-700 hover:to-pink-700 transition-all duration-300 ease-out transform hover:scale-110 shadow-lg hover:shadow-xl"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <svg 
+                            width="24" 
+                            height="24" 
+                            viewBox="0 0 24 24" 
+                            fill="currentColor"
+                            className="transition-transform duration-300 ease-out"
+                          >
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                          </svg>
+                        </a>
+                        
+                        {/* WhatsApp Button */}
+                        <a
+                          href={club.whatsapp}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-full hover:from-green-600 hover:to-green-700 transition-all duration-300 ease-out transform hover:scale-110 shadow-lg hover:shadow-xl"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <svg 
+                            width="24" 
+                            height="24" 
+                            viewBox="0 0 24 24" 
+                            fill="currentColor"
+                            className="transition-transform duration-300 ease-out"
+                          >
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.569-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
+                          </svg>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Hover Indicator */}
+                  {hoveredClub === index && selectedClub === null && (
+                    <div className="absolute inset-0 rounded-3xl border-2 border-white/50 animate-pulse"></div>
+                  )}
+                </div>
+
+                {/* Glow Effect for Selected */}
+                {selectedClub === index && (
+                  <div className="absolute inset-0 rounded-3xl bg-white/10 blur-xl -z-10 transition-opacity duration-500 ease-out"></div>
                 )}
               </div>
-
-              {/* Glow Effect for Selected */}
-              {selectedClub === index && (
-                <div className="absolute inset-0 rounded-3xl bg-white/10 blur-xl -z-10 transition-opacity duration-500 ease-out"></div>
-              )}
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* Instructions */}
-      <div className="text-center mt-12">
+      <div className="text-center mt-8 md:mt-12">
         <p className="text-gray-400 text-sm">
           The instagram and whatsapp for these groups are not available. These are not the official logos of these clubs
         </p>
         <p className="text-gray-400 text-sm">
-          Hover to preview • Click to expand • Click again to close
+          {isMobile ? 'Tap cards to view details' : 'Hover to preview • Click to expand • Click again to close'}
         </p>
       </div>
+
+      {/* Mobile Modal */}
+      {modalOpen && modalClub && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            onClick={closeModal}
+          ></div>
+          
+          {/* Modal Content */}
+          <div className="relative bg-white rounded-2xl max-w-sm w-full max-h-[90vh] overflow-hidden shadow-2xl">
+            {/* Background Image */}
+            <div className="absolute inset-0">
+              <Image
+                src={modalClub.img}
+                alt={modalClub.name}
+                fill
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-black/60"></div>
+            </div>
+            
+            {/* Close Button */}
+            <button
+              onClick={closeModal}
+              className="absolute top-4 right-4 z-10 w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+            
+            {/* Content */}
+            <div className="relative z-10 p-6 h-full flex flex-col justify-center text-center">
+              <h2 className="text-2xl font-bold text-white mb-2 drop-shadow-lg">
+                {modalClub.name}
+              </h2>
+              <p className="text-white/90 font-medium mb-4 drop-shadow-md">
+                {modalClub.role}
+              </p>
+              <p className="text-white text-lg italic mb-8 leading-relaxed drop-shadow-md">
+                {modalClub.desc || 'Sports club for athletic enthusiasts'}
+              </p>
+              
+              {/* Social Links */}
+              <div className="flex justify-center gap-4">
+                {/* Instagram Button */}
+                <a
+                  href={modalClub.insta}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full hover:from-purple-700 hover:to-pink-700 transition-all duration-300 ease-out transform hover:scale-110 shadow-lg hover:shadow-xl"
+                >
+                  <svg 
+                    width="24" 
+                    height="24" 
+                    viewBox="0 0 24 24" 
+                    fill="currentColor"
+                  >
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                  </svg>
+                </a>
+                
+                {/* WhatsApp Button */}
+                <a
+                  href={modalClub.whatsapp}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-full hover:from-green-600 hover:to-green-700 transition-all duration-300 ease-out transform hover:scale-110 shadow-lg hover:shadow-xl"
+                >
+                  <svg 
+                    width="24" 
+                    height="24" 
+                    viewBox="0 0 24 24" 
+                    fill="currentColor"
+                  >
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.569-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

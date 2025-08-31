@@ -29,7 +29,7 @@ export default function CakeWorld() {
 
   return (
     <MobilePlaceWithNearbyFullscreen
-      backgroundImage="/images/ww.jpg"
+      backgroundImage="/images/cake-world.jpg"
       title="📍 Cake World"
       onContentClick={handleTextClick}
       nearbyPlaces={places}

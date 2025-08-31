@@ -1,5 +1,5 @@
 'use client';
-import DashboardLayout from '@/components/DashboardLayout';
+import MobilePlaceLayout from '@/components/MobilePlaceLayout';
 import { useRouter } from 'next/navigation';
 
 export default function Anamudi() {
@@ -11,7 +11,7 @@ export default function Anamudi() {
 
 
   return (
-    <DashboardLayout>
+    <MobilePlaceLayout>
       <div
   className="h-screen w-full bg-cover bg-center flex items-center justify-center"
   style={{ backgroundImage: "url('/images/anamudi.jpg')" }}>
@@ -23,6 +23,6 @@ export default function Anamudi() {
       </div>
     </div>
 
-    </DashboardLayout>
+    </MobilePlaceLayout>
   );
 }

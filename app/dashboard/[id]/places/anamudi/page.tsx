@@ -11,7 +11,7 @@ export default function Anamudi() {
 
   return (
     <MobilePlaceLayout
-      backgroundImage="/images/iiser.jpg"
+      backgroundImage="/images/anamudi.jpg"
       title="📍 Anamudi Hostel Block"
       onContentClick={handleTextClick}
     >

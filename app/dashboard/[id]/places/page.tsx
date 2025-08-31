@@ -276,7 +276,7 @@ export default function PlacesPage() {
           {/* Footnote */}
           <div className="absolute bottom-3 left-4 right-4 text-center">
             <p className="text-gray-300 text-xs italic">
-              * Marked map view is not available in mobile view
+              * Marked map view is not available in mobile potrait view. Rotate to landscape mode.
             </p>
           </div>
         </div>

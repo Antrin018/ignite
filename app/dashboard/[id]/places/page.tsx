@@ -5,56 +5,165 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-const places = [
-  { id: 'main', name: 'MAIN GATE', top: '52%', left: '31%' },
-  { id: 'indoor', name: 'Indoor Stadium Area', top: '60%', left: '38%' },
-  { id: 'mess', name: 'CDH2', top: '66%', left: '49%' },
-  { id: 'anamudi', name: 'Anamudi block', top: '73%', left: '49%' },
-  { id: 'phd-hostels', name: 'PHD hostels', top: '42%', left: '58%' },
-  { id: 'cdh1', name: 'CDH1', top: '36%', left: '62%' },
-  { id: 'cake-world', name: 'Cake World', top: '24%', left: '58%' },
-  { id: 'tasty', name: 'Tasty', top: '24%', left: '47%' },
-  { id: 'red-cafe', name: 'Red Cafe', top: '17%', left: '57%' },
-  { id: 'msb', name: 'MSB', top: '5%', left: '47%' },
-  { id: 'lhc', name: 'LHC', top: '4%', left: '55%' },
-  { id: 'psb', name: 'PSB', top: '11%', left: '55%' },
-  { id: 'library', name: 'Library', top: '16%', left: '43%' },
-  { id: 'csb', name: 'CSB', top: '15%', left: '63%' },
-  { id: 'bsb', name: 'BSB', top: '20%', left: '70%' },
-  { id: 'health', name: 'Guest house', top: '9%', left: '40%' },
-  { id: 'kathinpara', name: 'Way to Kathinpara', top: '0%', left: '38%' }
+type CategoryType = 'entrance' | 'sports' | 'dining' | 'residence' | 'academic' | 'services';
+
+interface Place {
+  id: string;
+  name: string;
+  top: string;
+  left: string;
+  category: CategoryType;
+}
+
+const places: Place[] = [
+  { id: 'main', name: 'MAIN GATE', top: '52%', left: '31%', category: 'entrance' },
+  { id: 'indoor', name: 'Indoor Stadium Area', top: '60%', left: '38%', category: 'sports' },
+  { id: 'mess', name: 'CDH2', top: '66%', left: '49%', category: 'dining' },
+  { id: 'anamudi', name: 'Anamudi block', top: '73%', left: '49%', category: 'residence' },
+  { id: 'phd-hostels', name: 'PHD hostels', top: '42%', left: '58%', category: 'residence' },
+  { id: 'cdh1', name: 'CDH1', top: '36%', left: '62%', category: 'dining' },
+  { id: 'cake-world', name: 'Cake World', top: '24%', left: '58%', category: 'dining' },
+  { id: 'tasty', name: 'Tasty', top: '24%', left: '47%', category: 'dining' },
+  { id: 'red-cafe', name: 'Red Cafe', top: '17%', left: '57%', category: 'dining' },
+  { id: 'msb', name: 'MSB', top: '5%', left: '47%', category: 'academic' },
+  { id: 'lhc', name: 'LHC', top: '4%', left: '55%', category: 'academic' },
+  { id: 'psb', name: 'PSB', top: '11%', left: '55%', category: 'academic' },
+  { id: 'library', name: 'Library', top: '16%', left: '43%', category: 'academic' },
+  { id: 'csb', name: 'CSB', top: '15%', left: '63%', category: 'academic' },
+  { id: 'bsb', name: 'BSB', top: '20%', left: '70%', category: 'academic' },
+  { id: 'health', name: 'Guest house', top: '9%', left: '40%', category: 'services' },
+  { id: 'kathinpara', name: 'Way to Kathinpara', top: '0%', left: '38%', category: 'entrance' }
 ];
+
+const categoryIcons: Record<CategoryType, string> = {
+  entrance: '🚪',
+  sports: '🏃‍♂️',
+  dining: '🍽️',
+  residence: '🏠',
+  academic: '📚',
+  services: '🏥'
+};
+
+const categoryNames: Record<CategoryType, string> = {
+  entrance: 'Entrances & Gates',
+  sports: 'Sports & Recreation',
+  dining: 'Dining & Cafes',
+  residence: 'Hostels & Accommodation',
+  academic: 'Academic Buildings',
+  services: 'Services & Facilities'
+};
 
 export default function PlacesPage() {
   const { id: studentId } = useParams();
   const [loadedMarkers, setLoadedMarkers] = useState(new Set());
   const [hasAnimated, setHasAnimated] = useState(false);
-
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // Check if animations have been shown before in this session
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile) {
+      // For mobile, just show all items immediately
+      setLoadedMarkers(new Set(places.map((_, index) => index)));
+      setHasAnimated(true);
+      return;
+    }
+
+    // Desktop behavior - same as before
     const animationShown = sessionStorage.getItem('campusMapAnimationShown');
     
     if (!animationShown) {
-      // First visit - show staggered animation
       places.forEach((_, index) => {
         setTimeout(() => {
           setLoadedMarkers(prev => new Set([...prev, index]));
-        }, index * 150); // 150ms delay between each marker
+        }, index * 150);
       });
       
-      // Mark animation as shown and set all markers as loaded after animation completes
       setTimeout(() => {
         setHasAnimated(true);
         sessionStorage.setItem('campusMapAnimationShown', 'true');
       }, places.length * 150 + 500);
     } else {
-      // Subsequent visits - show all markers immediately without animation
       setLoadedMarkers(new Set(places.map((_, index) => index)));
       setHasAnimated(true);
     }
-  }, []);
+  }, [isMobile]);
 
+  // Group places by category for mobile view
+  const groupedPlaces = places.reduce((acc, place) => {
+    if (!acc[place.category]) {
+      acc[place.category] = [];
+    }
+    acc[place.category].push(place);
+    return acc;
+  }, {} as Record<CategoryType, Place[]>);
+
+  if (isMobile) {
+    return (
+      <DashboardLayout>
+        <div className="relative w-full h-full">
+          {/* Mobile Background */}
+          <div
+            className="relative w-full h-full bg-cover bg-center rounded-2xl overflow-hidden"
+            style={{ backgroundImage: "url('/images/iiser.jpg')" }}
+          >
+            {/* Overlay for better text readability */}
+            <div className="absolute inset-0 bg-black/40 rounded-2xl"></div>
+            
+            {/* Title Header */}
+            <div className="absolute top-4 left-4 right-4 z-20">
+              <h1 className="text-2xl font-bold text-white text-center drop-shadow-lg mb-2">
+                📍 Campus Directory
+              </h1>
+            </div>
+
+            {/* Scrollable Content Area */}
+            <div className="absolute top-16 left-4 right-4 bottom-16 z-10 overflow-y-auto">
+              <div className="space-y-4">
+                {(Object.entries(groupedPlaces) as [CategoryType, Place[]][]).map(([category, categoryPlaces]) => (
+                  <div key={category} className="bg-black/30 border border-white/5 rounded-lg p-4">
+                    <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+                      <span className="text-xl">{categoryIcons[category]}</span>
+                      {categoryNames[category]}
+                    </h3>
+                    <div className="space-y-2">
+                      {categoryPlaces.map((place) => (
+                        <Link
+                          key={place.id}
+                          href={`/dashboard/${studentId}/places/${place.id}`}
+                          className="block w-full text-left px-3 py-2 bg-white/7 text-yellow-500 font-medium rounded-lg shadow-lg  hover:bg-yellow-300 transition-all duration-300 text-sm"
+                        >
+                          {place.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Footnote */}
+            <div className="absolute bottom-3 left-4 right-4 text-center">
+              <p className="text-gray-300 text-xs italic">
+                * Marked map view is not available in mobile view
+              </p>
+            </div>
+          </div>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  // Desktop view - same as before
   return (
     <DashboardLayout>
       <div className="relative w-full h-full">
@@ -97,16 +206,14 @@ export default function PlacesPage() {
               >
                 {place.name}
               </Link>
-                 
-              
             </div>
           ))}
 
           <div className="absolute bottom-3 lg:bottom-7 left-0 w-full text-center px-4">
-                <p className="text-gray-300 text-xs lg:text-sm">
-                  Click the place names to visit their info page. On the info page, click the pulsating description box for more images.
-                </p>
-              </div>
+            <p className="text-gray-300 text-xs lg:text-sm">
+              Click the place names to visit their info page. On the info page, click the pulsating description box for more images.
+            </p>
+          </div>
 
           {!hasAnimated && (
             <div className="absolute bottom-12 lg:bottom-6 left-1/2 transform -translate-x-1/2">

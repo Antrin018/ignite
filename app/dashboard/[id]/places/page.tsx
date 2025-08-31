@@ -114,7 +114,7 @@ export default function PlacesPage() {
           {/* Mobile Background */}
           <div
             className="relative w-full h-full bg-cover bg-center rounded-2xl overflow-hidden"
-            style={{ backgroundImage: "url('/images/iiser.jpg')" }}
+            style={{ backgroundImage: "url('/images/indoor.jpg')" }}
           >
             {/* Overlay for better text readability */}
             <div className="absolute inset-0 bg-black/40 rounded-2xl"></div>

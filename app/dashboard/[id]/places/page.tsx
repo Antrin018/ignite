@@ -35,7 +35,23 @@ const places: Place[] = [
   { id: 'kathinpara', name: 'Way to Kathinpara', top: '0%', left: '38%', category: 'entrance' }
 ];
 
+const categoryIcons: Record<CategoryType, string> = {
+  entrance: '🚪',
+  sports: '🏃‍♂️',
+  dining: '🍽️',
+  residence: '🏠',
+  academic: '📚',
+  services: '🏥'
+};
 
+const categoryNames: Record<CategoryType, string> = {
+  entrance: 'Entrances & Gates',
+  sports: 'Sports & Recreation',
+  dining: 'Dining & Cafes',
+  residence: 'Hostels & Accommodation',
+  academic: 'Academic Buildings',
+  services: 'Services & Facilities'
+};
 
 export default function PlacesPage() {
   const { id: studentId } = useParams();
@@ -63,7 +79,14 @@ export default function PlacesPage() {
     }
   }, []);
 
-
+  // Group places by category for mobile view
+  const groupedPlaces = places.reduce((acc, place) => {
+    if (!acc[place.category]) {
+      acc[place.category] = [];
+    }
+    acc[place.category].push(place);
+    return acc;
+  }, {} as Record<CategoryType, Place[]>);
 
   return (
     <DashboardLayout>
@@ -127,22 +150,45 @@ export default function PlacesPage() {
              style={{ backgroundImage: "url('/images/iiser.jpg')" }}>
           
           {/* Overlay for better text readability */}
-          <div className="absolute inset-0 bg-black/60 rounded-2xl"></div>
+          <div className="absolute inset-0 bg-black/40 rounded-2xl"></div>
           
-          {/* Centered Message */}
-          <div className="absolute inset-0 flex items-center justify-center z-20">
-            <div className="text-center px-6">
-              <div className="text-6xl mb-4">📱</div>
-              <h1 className="text-2xl font-bold text-white mb-4 drop-shadow-lg">
-                Map View Not Available
-              </h1>
-              <p className="text-gray-300 text-lg mb-6">
-                The interactive campus map is only available on desktop devices.
-              </p>
-              <p className="text-gray-400 text-sm">
-                Please use a desktop or laptop computer to view the campus map.
-              </p>
+          {/* Title Header */}
+          <div className="absolute top-4 left-4 right-4 z-20">
+            <h1 className="text-2xl font-bold text-white text-center drop-shadow-lg mb-2">
+              📍 Campus Directory
+            </h1>
+          </div>
+
+          {/* Scrollable Content Area */}
+          <div className="absolute top-16 left-4 right-4 bottom-16 z-10 overflow-y-auto">
+            <div className="space-y-4">
+              {(Object.entries(groupedPlaces) as [CategoryType, Place[]][]).map(([category, categoryPlaces]) => (
+                <div key={category} className="bg-black/30 border border-white/5 rounded-lg p-4">
+                  <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+                    <span className="text-xl">{categoryIcons[category]}</span>
+                    {categoryNames[category]}
+                  </h3>
+                  <div className="space-y-2">
+                    {categoryPlaces.map((place) => (
+                      <Link
+                        key={place.id}
+                        href={`/dashboard/${studentId}/places/${place.id}`}
+                        className="block w-full text-left px-3 py-2 bg-white/7 text-yellow-500 font-medium rounded-lg shadow-lg  hover:bg-yellow-300 transition-all duration-300 text-sm"
+                      >
+                        {place.name}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
+          </div>
+
+          {/* Footnote */}
+          <div className="absolute bottom-3 left-4 right-4 text-center">
+            <p className="text-gray-300 text-xs italic">
+              * Marked map view is not available in mobile view
+            </p>
           </div>
         </div>
 

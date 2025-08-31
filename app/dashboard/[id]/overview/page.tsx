@@ -1,15 +1,17 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
-import { Sparkles, Rocket, Trophy, Users, Camera, Music, Code, Palette } from 'lucide-react';
+import { useParams, useRouter } from 'next/navigation';
+import { Sparkles, Rocket, Trophy, Users, Camera, Music, Code, Palette, X, ExternalLink, GiftIcon } from 'lucide-react';
 import DashboardLayout from '@/components/DashboardLayout';
 import { supabase } from '@/lib/supabase-client';
 
 export default function FresherWelcomePage() {
   const { id: studentId } = useParams();
+  const router = useRouter();
   const [name, setName] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
+  const [showPopup, setShowPopup] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchStudentData = async () => {
@@ -29,6 +31,22 @@ export default function FresherWelcomePage() {
 
     fetchStudentData();
   }, [studentId]);
+
+  // Show popup immediately when component mounts
+  useEffect(() => {
+    setShowPopup(true);
+  }, []);
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+  };
+
+  const handleGoToSponsors = () => {
+    router.push(`/dashboard/${studentId}/sponsors`);
+    setShowPopup(false);
+  };
+
+
 
   const opportunities = [
     {
@@ -167,6 +185,94 @@ export default function FresherWelcomePage() {
         </div>
       </div>
 
+      {/* Sponsor Popup Ad */}
+      {showPopup && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in-backdrop">
+          <div className="relative bg-gradient-to-br from-gray-900 to-black rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden border border-orange-500/30 animate-slide-up-scale">
+            {/* Close Button */}
+            <button
+              onClick={handleClosePopup}
+              className="absolute top-4 right-4 z-10 w-10 h-10 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+            >
+              <X className="text-white" size={20} />
+            </button>
+
+            <div className="flex flex-col lg:flex-row">
+              {/* Video Section */}
+              <div className="relative w-full lg:w-1/2 h-64 lg:h-96">
+                <video
+                  src="/video/Sponsor.mp4"
+                  className="w-full h-full object-cover"
+                  autoPlay
+                  loop
+                  muted
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+              </div>
+
+                             {/* Content Section */}
+               <div className="w-full lg:w-1/2 p-6 lg:p-8 space-y-6">
+                 {/* Header */}
+                 <div className="space-y-3 animate-slide-in-right" style={{animationDelay: '0.3s'}}>
+                   <div className="flex items-center gap-2">
+                     <div className="w-3 h-3 bg-orange-500 rounded-full animate-pulse"></div>
+                     <span className="text-orange-400 font-bold text-sm uppercase tracking-wide">Special Offer</span>
+                   </div>
+                   <h2 className="text-2xl lg:text-3xl font-bold text-white leading-tight">
+                     Premium Hostel Mattress
+                   </h2>
+                   <p className="text-gray-300 text-base">
+                     Get the perfect sleep solution for your hostel life with our custom single mattress.
+                   </p>
+                 </div>
+
+                 {/* Features */}
+                 <div className="space-y-3 animate-slide-in-right" style={{animationDelay: '0.5s'}}>
+                   <h3 className="text-white font-semibold flex items-center gap-2">
+                     <GiftIcon className="text-green-400 animate-bounce" size={18} />
+                     Key Features
+                   </h3>
+                   <div className="space-y-2">
+                     {['Motion absorption technology', 'Hassle-free Hostel delivery', 'One Year Warranty'].map((feature, index) => (
+                       <div key={index} className="flex items-center gap-3 text-gray-300 animate-fade-in-left" style={{animationDelay: `${0.6 + index * 0.1}s`}}>
+                         <div className="w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
+                         <span className="text-sm">{feature}</span>
+                       </div>
+                     ))}
+                   </div>
+                 </div>
+
+                 {/* Pricing */}
+                 <div className="bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-xl p-4 border border-orange-400/30 animate-scale-in" style={{animationDelay: '0.7s'}}>
+                   <div className="text-center space-y-2">
+                     <p className="text-white font-bold text-xl">
+                       Only <span className="text-yellow-400 text-2xl animate-pulse">₹1699</span>
+                     </p>
+                     <div className="flex items-center justify-center gap-2">
+                       <span className="text-gray-300 text-sm">Use Code:</span>
+                       <span className="px-3 py-1 bg-yellow-400 text-black rounded-lg font-bold text-sm animate-bounce">
+                         FRESHERS1300
+                       </span>
+                     </div>
+                   </div>
+                 </div>
+
+                                 {/* Action Button */}
+                 <div className="animate-bounce-in" style={{animationDelay: '0.8s'}}>
+                   <button
+                     onClick={handleGoToSponsors}
+                     className="w-full bg-gradient-to-r from-orange-600 to-red-500 text-white py-3 px-6 rounded-xl font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-orange-500/25 flex items-center justify-center gap-2 animate-pulse-glow"
+                   >
+                     <ExternalLink size={20} />
+                     View Full Details & Order
+                   </button>
+                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <style jsx>{`
         @keyframes slideInUp {
           from {
@@ -177,6 +283,117 @@ export default function FresherWelcomePage() {
             opacity: 1;
             transform: translateY(0);
           }
+        }
+        
+        @keyframes fadeInBackdrop {
+          from {
+            opacity: 0;
+            backdrop-filter: blur(0px);
+          }
+          to {
+            opacity: 1;
+            backdrop-filter: blur(8px);
+          }
+        }
+        
+        @keyframes slideUpScale {
+          0% {
+            opacity: 0;
+            transform: translateY(100px) scale(0.8);
+          }
+          50% {
+            opacity: 0.8;
+            transform: translateY(-20px) scale(1.05);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+        
+        @keyframes bounceIn {
+          0% {
+            opacity: 0;
+            transform: scale(0.3);
+          }
+          50% {
+            opacity: 1;
+            transform: scale(1.1);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        
+        @keyframes pulseGlow {
+          0%, 100% {
+            box-shadow: 0 0 5px rgba(255, 165, 0, 0.3), 0 0 10px rgba(255, 165, 0, 0.2);
+          }
+          50% {
+            box-shadow: 0 0 20px rgba(255, 165, 0, 0.6), 0 0 30px rgba(255, 165, 0, 0.4);
+          }
+        }
+        
+        .animate-fade-in-backdrop {
+          animation: fadeInBackdrop 0.5s ease-out;
+        }
+        
+        .animate-slide-up-scale {
+          animation: slideUpScale 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .animate-bounce-in {
+          animation: bounceIn 0.6s ease-out both;
+        }
+        
+        .animate-pulse-glow {
+          animation: pulseGlow 2s infinite;
+        }
+        
+        @keyframes slideInRight {
+          from {
+            opacity: 0;
+            transform: translateX(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        
+        @keyframes fadeInLeft {
+          from {
+            opacity: 0;
+            transform: translateX(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        
+        @keyframes scaleIn {
+          from {
+            opacity: 0;
+            transform: scale(0.9);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        
+        .animate-slide-in-right {
+          animation: slideInRight 0.6s ease-out both;
+        }
+        
+        .animate-fade-in-left {
+          animation: fadeInLeft 0.5s ease-out both;
+        }
+        
+        .animate-scale-in {
+          animation: scaleIn 0.5s ease-out both;
         }
         
         @keyframes bounce-twice {

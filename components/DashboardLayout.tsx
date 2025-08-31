@@ -14,15 +14,24 @@ export default function DashboardLayout({ children }: Props) {
   const pathname = usePathname();
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [activeButton, setActiveButton] = useState('');
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Check if current page is places (exact match for places page, not individual place pages)
+  const isPlacesPage = isMounted && pathname ? pathname.endsWith('/places') : false;
+
+  // Handle client-side mounting to prevent hydration mismatches
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Extract current page from pathname
   useEffect(() => {
-    if (pathname) {
+    if (pathname && isMounted) {
       const pathParts = pathname.split('/');
       const currentPage = pathParts[pathParts.length - 1];
       setActiveButton(currentPage);
     }
-  }, [pathname]);
+  }, [pathname, isMounted]);
 
   const goTo = async (path: string) => {
     if (!studentId || isTransitioning) return;
@@ -46,6 +55,142 @@ export default function DashboardLayout({ children }: Props) {
     { id: 'settings', icon: InfoIcon },
   ];
 
+  // Special layout for places page on mobile
+  if (isPlacesPage) {
+    return (
+      <div className="min-h-screen bg-black">
+        {/* Mobile Navigation Bar - visible on screens smaller than lg */}
+        <nav className="lg:hidden bg-black px-4 py-3">
+          <div className="flex items-center justify-between">
+            {/* Mobile nav items */}
+            <div className="flex items-center space-x-8 flex-1 justify-center relative">
+              {/* Active indicator background for mobile */}
+              <div 
+                className="absolute h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg opacity-20 transition-all duration-300 ease-out"
+                style={{
+                  width: '40px',
+                  transform: `translateX(${navItems.findIndex(item => item.id === activeButton) * 64 - (navItems.length - 1) * 32}px)`,
+                  opacity: activeButton ? 0.3 : 0
+                }}
+              />
+              
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = activeButton === item.id;
+                
+                return (
+                  <button
+                    key={item.id}
+                    className={`
+                      relative text-white p-2 rounded-lg transition-all duration-300 ease-out
+                      transform hover:scale-105
+                      ${isActive 
+                        ? 'bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg shadow-blue-500/25' 
+                        : 'hover:bg-gray-800 hover:shadow-lg hover:shadow-gray-800/50'
+                      }
+                      ${isTransitioning ? 'pointer-events-none' : ''}
+                    `}
+                    onClick={() => goTo(item.id)}
+                  >
+                    <Icon 
+                      size={20} 
+                      className={`
+                        transition-all duration-300 ease-out
+                        ${isActive ? 'text-white drop-shadow-sm' : 'text-gray-300'}
+                      `}
+                    />
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </nav>
+
+        <div className="flex lg:min-h-screen">
+          {/* Desktop Sidebar - hidden on screens smaller than lg */}
+          <aside className="hidden lg:flex w-20 flex-col items-center justify-center space-y-6 relative">
+            {/* Active indicator background */}
+            <div 
+              className="absolute w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl opacity-20 transition-all duration-300 ease-out"
+              style={{
+                transform: `translateY(${navItems.findIndex(item => item.id === activeButton) * 72 - (navItems.length - 1) * 36}px)`,
+                opacity: activeButton ? 0.3 : 0
+              }}
+            />
+            
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeButton === item.id;
+              
+              return (
+                <button
+                  key={item.id}
+                  className={`
+                    relative text-white p-3 rounded-xl transition-all duration-300 ease-out
+                    transform hover:scale-110 hover:-translate-y-1
+                    ${isActive 
+                      ? 'bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg shadow-blue-500/25' 
+                      : 'hover:bg-gray-800 hover:shadow-lg hover:shadow-gray-800/50'
+                    }
+                    ${isTransitioning ? 'pointer-events-none' : ''}
+                    group
+                  `}
+                 
+                  onClick={() => goTo(item.id)}
+                >
+                  <Icon 
+                    size={24} 
+                    className={`
+                      transition-all duration-300 ease-out
+                      ${isActive ? 'text-white drop-shadow-sm' : 'text-gray-300 group-hover:text-white'}
+                    `}
+                  />
+                  
+                  {/* Hover tooltip */}
+                  <div className="absolute left-16 top-1/2 -translate-y-1/2 bg-gray-900 text-white px-3 py-1 rounded-lg text-sm font-medium opacity-0 pointer-events-none group-hover:opacity-100 transition-all duration-200 whitespace-nowrap shadow-lg" style={{ zIndex: 9999 }}>
+      
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-2 bg-gray-900 rotate-45"></div>
+                  </div>
+                </button>
+              );
+            })}
+          </aside>
+
+          {/* Main Content - Full height for places page */}
+          <main className="flex-1 p-3 lg:p-6 relative">
+            {/* Content wrapper with transition - Full viewport height on mobile for places */}
+            <div 
+              className={`
+                bg-white rounded-2xl lg:rounded-3xl shadow-2xl w-full relative overflow-hidden
+                transition-all duration-300 ease-out
+                ${isTransitioning ? 'opacity-95 scale-[0.998]' : 'opacity-100 scale-100'}
+                h-[calc(100vh-96px)] lg:h-full
+              `}
+            >
+              {/* Loading overlay during transitions */}
+              {isTransitioning && (
+                <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-10 flex items-center justify-center">
+                  <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+                </div>
+              )}
+              
+              {/* Content */}
+              <div 
+                className={`
+                  h-full transition-all duration-200 ease-out
+                  ${isTransitioning ? 'opacity-70 blur-sm' : 'opacity-100 blur-0'}
+                `}
+              >
+                {children}
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
+
+  // Default layout for other pages
   return (
     <div className="min-h-screen bg-black">
       {/* Mobile Navigation Bar - visible on screens smaller than lg */}

@@ -28,45 +28,18 @@ export default function HomePage() {
   
   
     setLoading(true);
-  
-    // Step 1: Check if student exists
-    const { data: existingStudent, error: fetchError } = await supabase
-      .from('students')
-      .select('*')
-      .eq('email', email)
+
+    const { data, error } = await supabase
+      .rpc('get_or_create_student', { p_name: name, p_email: email })
       .single();
-  
-    let studentId;
-  
-    if (fetchError && fetchError.code !== 'PGRST116') {
-      console.error('Fetch error:', fetchError); // Debug log
-      setMessage(`❌ Unexpected error: ${fetchError.message}`);
+
+    if (error) {
+      setMessage('Could not sign in. Please try again.');
       setLoading(false);
       return;
     }
-  
-    // Step 2: Insert if not existing
-    if (!existingStudent) {
-      const { data: insertedStudent, error: insertError } = await supabase
-        .from('students')
-        .insert([{ name, email }])
-        .select('id') // return ID of the newly inserted student
-        .single();
-  
-      if (insertError) {
-        console.error('Insert error:', insertError); // Debug log
-        setMessage(`❌ Could not register: ${insertError.message}`);
-        setLoading(false);
-        return;
-      }
-  
-      studentId = insertedStudent.id;
-    } else {
-      studentId = existingStudent.id;
-    }
-  
-    console.log('Redirecting to dashboard with studentId:', studentId); // Debug log
-    router.push(`/dashboard/${studentId}/overview`);
+
+    router.push(`/dashboard/${data.id}/overview`);
     setLoading(false);
   };
 

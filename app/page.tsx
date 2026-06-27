@@ -13,14 +13,16 @@ export default function HomePage() {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setMessage('');
-    
-    console.log('Form submitted with:', { name, email }); // Debug log
-  
+
     if (!email || !name) {
-      setMessage('⚠️ Please enter your name and email.');
+      setMessage('Please enter your name and email.');
+      return;
+    }
+
+    if (!email.endsWith('@iisertvm.ac.in')) {
+      setMessage('Please use your IISER TVM college email (@iisertvm.ac.in).');
       return;
     }
   
@@ -64,7 +66,6 @@ export default function HomePage() {
     }
   
     console.log('Redirecting to dashboard with studentId:', studentId); // Debug log
-    setMessage('✅ Success! Redirecting...');
     router.push(`/dashboard/${studentId}/overview`);
     setLoading(false);
   };
@@ -91,7 +92,7 @@ export default function HomePage() {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form className="space-y-8">
           <div className="space-y-6">
             <div className="relative">
               <input
@@ -115,7 +116,8 @@ export default function HomePage() {
           </div>
 
           <button
-            type="submit"
+            type="button"
+            onClick={handleSubmit}
             disabled={loading}
             className="w-full bg-red-500 text-white py-4 rounded-full font-medium text-lg hover:bg-red-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 duration-200"
           >

@@ -31,7 +31,7 @@ export default function HomePage() {
 
     const { data, error } = await supabase
       .rpc('get_or_create_student', { p_name: name, p_email: email })
-      .single();
+      .single<{ id: string; name: string; email: string }>();
 
     if (error) {
       setMessage('Could not sign in. Please try again.');
